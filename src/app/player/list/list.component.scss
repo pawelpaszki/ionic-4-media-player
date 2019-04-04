@@ -3,7 +3,7 @@ ion-icon {
   color: white;
 }
 
-.playlist-item-top {
+.playlist-item-top, .playlist-item-card {
   font-size: 12px;
   font-weight: 700;
 }
@@ -12,4 +12,15 @@ ion-icon {
   font-size: 12px;
   font-weight: 700;
   color: lightgray;
+}
+
+ion-card {
+  width: 100%;
+  margin: 6px 0 !important;
+  padding: 0 !important;
+}
+
+ion-button {
+  height: 100%;
+  font-weight: 700;
 }

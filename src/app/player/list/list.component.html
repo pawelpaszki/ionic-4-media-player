@@ -2,8 +2,46 @@
 
   <!-- <ion-card style="height: 100px;" *ngFor="let song of songs"> 
     <p>{{song}}</p>
-  </ion-card > -->
-  <ion-list>
+  </ion-card> -->
+  <ion-list *ngIf="displayMode === 'detail'">
+    <ion-item-sliding *ngFor="let song of songs; let i = index">
+      <ion-item lines="none">
+        <ion-card>
+          <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
+            <div style="flex: 2;" id="img">
+              <img src="../../assets/icon/album.jpg">
+            </div>
+            <div style="flex: 8; flex-direction: row; width: 100%; height: auto;">
+              <div style="flex: 2; min-height: 66%; max-height: 66%; padding-left: 0.5em;" class="playlist-item-card">
+                <div style="line-height: 1.5em; max-height: 3em; overflow-y: hidden;">
+                  {{song}}
+                </div>
+              </div>
+              <div style="flex: 1; min-height: 34%; max-height: 34%; padding-left: 0.5em; display: flex; flex-direction: row;" class="playlist-item-card">
+                <div style="flex: 1; text-align: center; font-size: 14px; font-weight: 400;">
+                  4 MB
+                </div>
+                <div style="flex: 2; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
+                  <ion-icon name="musical-note" style="color: black; font-size: 18px;"></ion-icon> <p style="margin: 0; display: inline-block;">2239</p>
+                </div>
+                <div style="flex: 2; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
+                  <ion-icon name="time" style="color: black; font-size: 18px;"></ion-icon> 4:25:19
+                </div>
+                <div style="flex: 1; text-align: center;">
+                  <ion-icon name="heart" style="color: black; font-size: 18px;"></ion-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-card>
+        <ion-reorder slot="end"></ion-reorder>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-button color="danger" (click)="delete(i)">Delete</ion-button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-list *ngIf="displayMode === 'list'" reorder="true" (ionItemReorder)="reorderItems($event)">
     <ion-item-sliding #item *ngFor="let song of songs; let i = index" style="border-bottom: 1px solid black;">
       <ion-item lines="none" item-text-wrap>
         <div style="display: flex; flex-direction: column; width: 100%; height: auto;">
@@ -33,7 +71,6 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-
 
   <div style="position: fixed; bottom: 60px; left: 0; height: 50px; width: 100%; background: grey; display: flex; flex-direction: row; align-items: center; text-align: center;">
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
