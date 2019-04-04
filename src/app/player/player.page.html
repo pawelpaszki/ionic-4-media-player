@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- <ion-segment (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="player">
+        <ion-icon name="play"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="list">
+        <ion-icon name="list"></ion-icon>
+      </ion-segment-button>
+    </ion-segment> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-mediaplayer *ngIf="visibleTab === 'player'">
+  
+  </app-mediaplayer>
+  <app-list *ngIf="visibleTab === 'list'">
+
+  </app-list>
+
+</ion-content>
+
+<ion-footer>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button (click)="changeTab('player')" [ngStyle]="{'color': visibleTab === 'player' ? '#b5c827' : 'white' }">
+      <ion-icon name="play"></ion-icon>
+      <ion-label>player</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="changeTab('list')" [ngStyle]="{'color': visibleTab === 'list' ? '#b5c827' : 'white' }">
+      <ion-icon name="list"></ion-icon>
+      <ion-label>list</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-footer>
+

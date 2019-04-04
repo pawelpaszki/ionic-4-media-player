@@ -1,0 +1,59 @@
+<div style="height: auto; margin-bottom: 60px; width: 100%; background: yellow;">
+
+  <!-- <ion-card style="height: 100px;" *ngFor="let song of songs"> 
+    <p>{{song}}</p>
+  </ion-card > -->
+  <ion-list>
+    <ion-item-sliding #item *ngFor="let song of songs; let i = index" style="border-bottom: 1px solid black;">
+      <ion-item lines="none" item-text-wrap>
+        <div style="display: flex; flex-direction: column; width: 100%; height: auto;">
+          <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
+            <div style="flex: 1;" class="playlist-item-top">
+              {{i + 1}}.
+            </div>
+            <div style="flex: 7;" class="playlist-item-top">
+              {{song}}
+            </div>
+            <div style="flex: 2; align-items: center; text-align: center;" class="playlist-item-top">
+              4:25
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: row; width: 100%; height: auto; margin-top: 0.3em;">
+            <div style="flex: 8;" class="playlist-item-bottom">
+              4 MB
+            </div>
+            <div style="flex: 2; align-items: center; text-align: center;">
+              <ion-icon name="heart" style="color: black; font-size: 18px;"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-button color="danger" (click)="delete(i)">Delete</ion-button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+
+  <div style="position: fixed; bottom: 60px; left: 0; height: 50px; width: 100%; background: grey; display: flex; flex-direction: row; align-items: center; text-align: center;">
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+      <ion-icon name="md-add-circle" (click)="addFile()"></ion-icon>
+    </div>
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+      <ion-icon name="funnel"></ion-icon>
+    </div>
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+      <ion-icon name="reorder"></ion-icon>
+    </div>
+    <div *ngIf="displayMode === 'detail'" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeDisplayMode()">
+      <ion-icon name="image"></ion-icon>
+    </div>
+    <div *ngIf="displayMode === 'list'" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeDisplayMode()">
+      <ion-icon name="ios-list"></ion-icon>
+    </div>
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+      <ion-icon name="search"></ion-icon>
+    </div>
+  </div>
+</div>
+
