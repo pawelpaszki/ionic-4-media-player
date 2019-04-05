@@ -6,21 +6,27 @@ ion-icon {
 .playlist-item-top, .playlist-item-card {
   font-size: 12px;
   font-weight: 700;
+  color: #b5c827;
 }
 
 .playlist-item-bottom {
   font-size: 12px;
   font-weight: 700;
-  color: lightgray;
+  color: #b5c827;
 }
 
 ion-card {
   width: 100%;
   margin: 6px 0 !important;
-  padding: 0 !important;
+  padding: 0.3em !important;
+  background: black;
 }
 
 ion-button {
   height: 100%;
   font-weight: 700;
+}
+
+ion-list {
+  padding: 0;
 }

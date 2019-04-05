@@ -10,8 +10,21 @@ import { Media, MediaObject } from '@ionic-native/media/ngx';
 })
 export class ListComponent implements AfterContentInit {
 
-  public songs: String[] = ['song1 by some random artist', 'song2  by some random artis', 'song3  by some random artis', 'song4  by some random artis', 
-                            'song5  by some random artis', 'song6  by some random artis', 'song7  by some random artis', 'song8  by some random artis'];
+  public editMode: boolean = false;
+  public reorderingEnabled: boolean = false;
+  public deletionEnabled: boolean = false;
+  public songs: any[] = [ {name: 'song1 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song2 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song3 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song4 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song5 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song6 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song7 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song8 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song9 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song10 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song11 by some random artist', isMarkedForDeletion: false},
+                          {name: 'song12 by some random artist', isMarkedForDeletion: false} ];
   public displayMode: string = 'detail';
 
   constructor(public fileChooser: FileChooser, public media: Media, /*public fileService: FileService*/) { }
@@ -28,13 +41,38 @@ export class ListComponent implements AfterContentInit {
     this.songs.splice(index,1);
   }
 
-  reorderItems(indexes) {
-    console.log(indexes);
-    let from = indexes.from;
-    let to = indexes.to;
-    let fromItem = this.songs[from];
-    let toItem = this.songs[to];
-    this.songs[to] = fromItem;
-    this.songs[from] = toItem;
+  reorderItems(event) {
+    const itemToMove = this.songs.splice(event.detail.from, 1)[0];
+    this.songs.splice(event.detail.to, 0, itemToMove);
+    event.detail.complete();
+  }
+
+  toggleEditMode() {
+    this.editMode = !this.editMode;
+    if (!this.editMode) {
+      this.reorderingEnabled = false;
+      this.deletionEnabled = false;
+    }
+  }
+
+  toggleReordering() {
+    this.reorderingEnabled = !this.reorderingEnabled;
+  }
+
+  deleteAction() {
+    if (!this.deletionEnabled) {
+      this.deletionEnabled = true;
+    } else {
+      if (this.songs !== null && this.songs !== undefined && this.songs.length > 0) {
+        this.songs.forEach(song => {
+          console.log(song.name + ' ' + song.isMarkedForDeletion);
+        });
+      }
+    }
+  }
+
+  clearModes() {
+    this.reorderingEnabled = false;
+    this.deletionEnabled = false;
   }
 }
