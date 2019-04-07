@@ -2,6 +2,7 @@ import { Component, AfterContentInit } from '@angular/core';
 // import { FileService } from 'src/app/services/file-service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
+import { PersistenceService, Song } from 'src/providers/persistence.service';
 
 @Component({
   selector: 'app-list',
@@ -14,24 +15,15 @@ export class ListComponent implements AfterContentInit {
   public editMode: boolean = false;
   public reorderingEnabled: boolean = false;
   public deletionEnabled: boolean = false;
-  public songs: any[] = [ {name: 'song1 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song2 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song3 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song4 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song5 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song6 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song7 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song8 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song9 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song10 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song11 by some random artist', isMarkedForDeletion: false},
-                          {name: 'song12 by some random artist', isMarkedForDeletion: false} ];
+  public songs: Song[] = [];
   public displayMode: string = 'detail';
 
-  constructor(public fileChooser: FileChooser, public media: Media, /*public fileService: FileService*/) { }
+  constructor(public fileChooser: FileChooser, public media: Media, public persistenceService: PersistenceService /*public fileService: FileService*/) { }
 
   ngAfterContentInit() {
-    console.log(this.songs);
+    this.persistenceService.getSongs().then(object => {
+      this.songs = object.songs;
+    });
   }
 
   changeDisplayMode() {
