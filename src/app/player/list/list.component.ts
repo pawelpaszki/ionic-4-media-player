@@ -10,6 +10,7 @@ import { Media, MediaObject } from '@ionic-native/media/ngx';
 })
 export class ListComponent implements AfterContentInit {
 
+  public allMarkedForDeletion: boolean = false;
   public editMode: boolean = false;
   public reorderingEnabled: boolean = false;
   public deletionEnabled: boolean = false;
@@ -64,11 +65,21 @@ export class ListComponent implements AfterContentInit {
       this.deletionEnabled = true;
     } else {
       if (this.songs !== null && this.songs !== undefined && this.songs.length > 0) {
+        let tempSongs = [];
         this.songs.forEach(song => {
-          console.log(song.name + ' ' + song.isMarkedForDeletion);
+          if (!song.isMarkedForDeletion) {
+            tempSongs.push(song);
+          }
         });
+        this.songs = tempSongs;
       }
     }
+  }
+
+  toggleMarkedForDeletion() {
+    this.songs.forEach(song => {
+      song.isMarkedForDeletion = this.allMarkedForDeletion;
+    });
   }
 
   clearModes() {
