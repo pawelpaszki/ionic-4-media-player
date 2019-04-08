@@ -2,7 +2,7 @@
 
 
   <div *ngIf="displayMode === constants.DISPLAY_MODES.DETAIL && !editMode">
-    <ion-card *ngFor="let song of songs; let i = index">
+    <ion-card *ngFor="let song of songs; let i = index" [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none' }">
       <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
         <div style="flex: 2;" id="img">
           <img src="../../assets/icon/album.jpg">
@@ -33,7 +33,7 @@
   </div>
 
   <div *ngIf="displayMode === constants.DISPLAY_MODES.LIST && !editMode">
-    <ion-card *ngFor="let song of songs; let i = index">
+    <ion-card *ngFor="let song of songs; let i = index" [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none' }">
       <div style="display: flex; flex-direction: column; width: 100%; height: auto;">
         <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
           <div style="flex: 1;" class="playlist-item-top">
@@ -118,8 +118,16 @@
     <div *ngIf="displayMode === constants.DISPLAY_MODES.LIST" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeDisplayMode()">
       <ion-icon name="ios-list"></ion-icon>
     </div>
-    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="toggleSearch()">
       <ion-icon name="search"></ion-icon>
+    </div>
+  </div>
+  <div *ngIf="!editMode && searchEnabled" style="position: fixed; bottom: 60px; left: 0; height: 50px; width: 100%; background: #282828; display: flex; flex-direction: row; align-items: center; text-align: center;">
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+      <ion-icon name="md-close" (click)="toggleSearch()"></ion-icon>
+    </div>
+    <div style="flex: 4; -ms-flex: 4; -webkit-flex: 4;" >
+      <ion-input placeholder="Start typing to search" (ionChange)="updateSearchPhrase($event)"></ion-input>
     </div>
   </div>
   <div *ngIf="editMode" style="position: fixed; bottom: 60px; left: 0; height: 50px; width: 100%; background: #282828; display: flex; flex-direction: row; align-items: center; text-align: center;">

@@ -12,6 +12,8 @@ import * as Data from '../../../AppConstants';
 })
 export class ListComponent implements AfterContentInit {
 
+  public searchPhrase: string = '';
+  public searchEnabled: boolean = false;
   public allMarkedForDeletion: boolean = false;
   public editMode: boolean = false;
   public reorderingEnabled: boolean = false;
@@ -92,5 +94,16 @@ export class ListComponent implements AfterContentInit {
         this.sortBy = this.sortModes[currentSortIndex + 1];
       }
     }
+  }
+
+  toggleSearch() {
+    this.searchEnabled = !this.searchEnabled;
+    if (!this.searchEnabled) {
+      this.searchPhrase = '';
+    }
+  }
+
+  updateSearchPhrase(event) {
+    this.searchPhrase = event.detail.value;
   }
 }
