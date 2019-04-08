@@ -1,7 +1,7 @@
 <div style="height: auto; margin-bottom: 56px; width: 100%; background: white;">
 
 
-  <div *ngIf="displayMode === 'detail' && !editMode">
+  <div *ngIf="displayMode === constants.DISPLAY_MODES.DETAIL && !editMode">
     <ion-card *ngFor="let song of songs; let i = index">
       <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
         <div style="flex: 2;" id="img">
@@ -32,7 +32,7 @@
     </ion-card>
   </div>
 
-  <div *ngIf="displayMode === 'list' && !editMode">
+  <div *ngIf="displayMode === constants.DISPLAY_MODES.LIST && !editMode">
     <ion-card *ngFor="let song of songs; let i = index">
       <div style="display: flex; flex-direction: column; width: 100%; height: auto;">
         <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
@@ -91,16 +91,31 @@
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
       <ion-icon name="md-add-circle" (click)="addFile()"></ion-icon>
     </div>
-    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-      <ion-icon name="funnel"></ion-icon>
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeSort()">
+      <ion-badge *ngIf="sortBy === constants.SORT_MODES.NAME_ASCENDING" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
+        A<ion-icon name="md-arrow-round-up" style="font-size: 12px; position: relative; color: #b5c827;"></ion-icon>
+      </ion-badge>
+      <ion-badge *ngIf="sortBy === constants.SORT_MODES.NAME_DESCENDING" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
+        Z<ion-icon name="md-arrow-round-down" style="font-size: 12px; position: relative; color: #b5c827;"></ion-icon>
+      </ion-badge>
+      <ion-badge *ngIf="sortBy === constants.SORT_MODES.PLAYED_ASCENDING" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
+        <ion-icon name="musical-note" style="color: #b5c827; font-size: 12px; position: relative;"></ion-icon> 
+        <ion-icon name="md-arrow-round-up" style="font-size: 12px; position: relative; color: #b5c827; margin-left: -2px;"></ion-icon>
+      </ion-badge>
+      <ion-badge *ngIf="sortBy === constants.SORT_MODES.PLAYED_DESCENDING" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
+        <ion-icon name="musical-note" style="color: #b5c827; font-size: 12px; position: relative;"></ion-icon> 
+        <ion-icon name="md-arrow-round-down" style="font-size: 12px; position: relative; color: #b5c827; margin-left: -2px;"></ion-icon>
+      </ion-badge>
+      <ion-icon name="funnel" style="position: absolute; left: calc(30% - 15px); top: 9px;">
+      </ion-icon>
     </div>
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
       <ion-icon name="create" (click)="toggleEditMode()"></ion-icon>
     </div>
-    <div *ngIf="displayMode === 'detail'" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeDisplayMode()">
+    <div *ngIf="displayMode === constants.DISPLAY_MODES.DETAIL" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeDisplayMode()">
       <ion-icon name="image"></ion-icon>
     </div>
-    <div *ngIf="displayMode === 'list'" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeDisplayMode()">
+    <div *ngIf="displayMode === constants.DISPLAY_MODES.LIST" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeDisplayMode()">
       <ion-icon name="ios-list"></ion-icon>
     </div>
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">

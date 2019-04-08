@@ -3,6 +3,7 @@ import { Component, AfterContentInit } from '@angular/core';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { PersistenceService, Song } from 'src/providers/persistence.service';
+import * as Data from '../../../AppConstants';
 
 @Component({
   selector: 'app-list',
@@ -16,7 +17,10 @@ export class ListComponent implements AfterContentInit {
   public reorderingEnabled: boolean = false;
   public deletionEnabled: boolean = false;
   public songs: Song[] = [];
-  public displayMode: string = 'detail';
+  public constants = Data;
+  public sortModes: string[] = Object.values(this.constants.SORT_MODES);
+  public sortBy: string = this.sortModes[0];// TODO get from persistence service later
+  public displayMode: string = this.constants.DISPLAY_MODES.DETAIL; // TODO get from persistence service later
 
   constructor(public fileChooser: FileChooser, public media: Media, public persistenceService: PersistenceService /*public fileService: FileService*/) { }
 
@@ -27,7 +31,7 @@ export class ListComponent implements AfterContentInit {
   }
 
   changeDisplayMode() {
-    this.displayMode = this.displayMode === 'detail' ? 'list' : 'detail';
+    this.displayMode = this.displayMode === this.constants.DISPLAY_MODES.DETAIL ? this.constants.DISPLAY_MODES.LIST : this.constants.DISPLAY_MODES.DETAIL;
   }
 
   delete(index: number) {
@@ -77,5 +81,16 @@ export class ListComponent implements AfterContentInit {
   clearModes() {
     this.reorderingEnabled = false;
     this.deletionEnabled = false;
+  }
+
+  changeSort() {
+    if (this.sortModes !== undefined && this.sortModes !== null && this.sortModes.length > 1) {
+      const currentSortIndex = this.sortModes.indexOf(this.sortBy);
+      if (currentSortIndex === this.sortModes.length - 1) {
+        this.sortBy = this.sortModes[0];
+      } else {
+        this.sortBy = this.sortModes[currentSortIndex + 1];
+      }
+    }
   }
 }
