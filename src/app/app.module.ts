@@ -15,6 +15,7 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { IonicStorageModule } from '@ionic/storage';
 import { PersistenceService } from 'src/providers/persistence.service';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +29,7 @@ import { PersistenceService } from 'src/providers/persistence.service';
   providers: [
     StatusBar,
     SplashScreen,
+    Keyboard,
     Media,
     File,    
     FileChooser,

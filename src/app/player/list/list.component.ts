@@ -4,6 +4,7 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { PersistenceService, Song } from 'src/providers/persistence.service';
 import * as Data from '../../../AppConstants';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 @Component({
   selector: 'app-list',
@@ -24,7 +25,8 @@ export class ListComponent implements AfterContentInit {
   public sortBy: string = this.sortModes[0];// TODO get from persistence service later
   public displayMode: string = this.constants.DISPLAY_MODES.DETAIL; // TODO get from persistence service later
 
-  constructor(public fileChooser: FileChooser, public media: Media, public persistenceService: PersistenceService /*public fileService: FileService*/) { }
+  constructor(public fileChooser: FileChooser, public media: Media, public persistenceService: PersistenceService,
+              public keyboard: Keyboard /*public fileService: FileService*/) { }
 
   ngAfterContentInit() {
     this.persistenceService.getSongs().then(object => {
