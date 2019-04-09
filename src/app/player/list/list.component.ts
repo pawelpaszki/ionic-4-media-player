@@ -5,6 +5,7 @@ import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { PersistenceService, Song } from 'src/providers/persistence.service';
 import * as Data from '../../../AppConstants';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-list',
@@ -26,7 +27,7 @@ export class ListComponent implements AfterContentInit {
   public displayMode: string = this.constants.DISPLAY_MODES.DETAIL; // TODO get from persistence service later
 
   constructor(public fileChooser: FileChooser, public media: Media, public persistenceService: PersistenceService,
-              public keyboard: Keyboard /*public fileService: FileService*/) { }
+              public keyboard: Keyboard, public platform: Platform /*public fileService: FileService*/) { }
 
   ngAfterContentInit() {
     this.persistenceService.getSongs().then(object => {
@@ -46,6 +47,7 @@ export class ListComponent implements AfterContentInit {
     const itemToMove = this.songs.splice(event.detail.from, 1)[0];
     this.songs.splice(event.detail.to, 0, itemToMove);
     event.detail.complete();
+    this.sortBy = this.sortModes[0]; // no sort after rearranging
   }
 
   toggleEditMode() {
@@ -94,6 +96,39 @@ export class ListComponent implements AfterContentInit {
         this.sortBy = this.sortModes[0];
       } else {
         this.sortBy = this.sortModes[currentSortIndex + 1];
+      }
+    }
+    this.sortSongs();
+  }
+
+  sortSongs() {
+    switch (this.sortBy) { // 'NAME_ASCENDING' | 'NAME_DESCENDING' | 'PLAYED_ASCENDING' | 'PLAYED_DESCENDING'
+      case this.sortModes[0]: {
+        // do nothing - no sort
+        console.log(this.sortModes[0]);
+        break;
+      }
+      case this.sortModes[1]: {
+        console.log(this.sortModes[1]);
+        this.songs.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+        break;
+      }
+      case this.sortModes[2]: {
+        console.log(this.sortModes[2]);
+        this.songs.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+        this.songs.reverse();
+        break;
+      }
+      case this.sortModes[3]: {
+        console.log(this.sortModes[3]);
+        this.songs.sort((a,b) => (a.numberOfPlaybacks > b.numberOfPlaybacks) ? 1 : ((b.numberOfPlaybacks > a.numberOfPlaybacks) ? -1 : 0));
+        break;
+      }
+      case this.sortModes[4]: {
+        console.log(this.sortModes[4]);
+        this.songs.sort((a,b) => (a.numberOfPlaybacks > b.numberOfPlaybacks) ? 1 : ((b.numberOfPlaybacks > a.numberOfPlaybacks) ? -1 : 0));
+        this.songs.reverse();
+        break;
       }
     }
   }
