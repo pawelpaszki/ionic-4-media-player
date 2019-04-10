@@ -15,13 +15,13 @@
           </div>
           <div style="flex: 1; min-height: 34%; max-height: 34%; padding-left: 0.5em; display: flex; flex-direction: row;" class="playlist-item-card">
             <div style="flex: 1; text-align: center; font-size: 14px; font-weight: 400;">
-              4 MB
+              {{song.size}}
             </div>
             <div style="flex: 2; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
               <ion-icon name="musical-note" style="color: #b5c827; font-size: 18px;"></ion-icon> <p style="margin: 0; display: inline-block;">{{song.numberOfPlaybacks}}</p>
             </div>
             <div style="flex: 2; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
-              <ion-icon name="time" style="color: #b5c827; font-size: 18px;"></ion-icon> 4:25:19
+              <ion-icon name="time" style="color: #b5c827; font-size: 18px;"></ion-icon> {{song.duration}}
             </div>
             <div style="flex: 1; text-align: center;">
               <ion-icon name="heart" style="color: #b5c827; font-size: 18px;"></ion-icon>
@@ -43,12 +43,12 @@
             {{song.name}}
           </div>
           <div style="flex: 2; align-items: center; text-align: center;" class="playlist-item-top">
-            4:25
+            {{song.duration}}
           </div>
         </div>
         <div style="display: flex; flex-direction: row; width: 100%; height: auto; margin-top: 0.3em;">
           <div style="flex: 2;" class="playlist-item-bottom">
-            4 MB
+            {{song.size}}
           </div>
           <div style="flex: 6; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
             <ion-icon name="musical-note" style="color: #b5c827; font-size: 18px;"></ion-icon> <p style="margin: 0; display: inline-block;">{{song.numberOfPlaybacks}}</p>

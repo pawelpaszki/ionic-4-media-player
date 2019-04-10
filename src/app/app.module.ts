@@ -16,6 +16,8 @@ import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { IonicStorageModule } from '@ionic/storage';
 import { PersistenceService } from 'src/providers/persistence.service';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { FileService } from 'src/providers/file.service';
+import { AudioService } from 'src/providers/audio.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,7 +36,9 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
     File,    
     FileChooser,
     FilePath,
+    FileService,
     PersistenceService,
+    AudioService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

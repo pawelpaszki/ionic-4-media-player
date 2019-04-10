@@ -1,11 +1,12 @@
 import { Component, AfterContentInit } from '@angular/core';
-// import { FileService } from 'src/app/services/file-service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { PersistenceService, Song } from 'src/providers/persistence.service';
 import * as Data from '../../../AppConstants';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Platform } from '@ionic/angular';
+import { FileService } from 'src/providers/file.service';
+import { AudioService } from 'src/providers/audio.service';
 
 @Component({
   selector: 'app-list',
@@ -26,8 +27,8 @@ export class ListComponent implements AfterContentInit {
   public sortBy: string = this.sortModes[0];// TODO get from persistence service later
   public displayMode: string = this.constants.DISPLAY_MODES.DETAIL; // TODO get from persistence service later
 
-  constructor(public fileChooser: FileChooser, public media: Media, public persistenceService: PersistenceService,
-              public keyboard: Keyboard, public platform: Platform /*public fileService: FileService*/) { }
+  constructor(public fileChooser: FileChooser, public persistenceService: PersistenceService,
+              public keyboard: Keyboard, public platform: Platform, public fileService: FileService, public audioService: AudioService) { }
 
   ngAfterContentInit() {
     this.persistenceService.getSongs().then(object => {
@@ -142,5 +143,17 @@ export class ListComponent implements AfterContentInit {
 
   updateSearchPhrase(event) {
     this.searchPhrase = event.detail.value;
+  }
+
+  async addFile() {
+    let songURI = await this.fileService.openFile();
+    let nativePath = await this.fileService.getNativePath(songURI);
+    let fileInfo = await this.fileService.getFileInfo(nativePath);
+    let mediaPath = nativePath.replace(/file:\/\//g, '');
+    let fileName = fileInfo.name;
+    let fileSize = await this.fileService.getFileSize(songURI);
+    let duration = await this.audioService.getDuration(mediaPath);
+    console.log(duration);
+    this.songs.push({name: fileName, mediaPath: mediaPath, duration: duration, numberOfPlaybacks: 0, favourite: false, imageURL: null, isMarkedForDeletion: false, size: fileSize});
   }
 }
