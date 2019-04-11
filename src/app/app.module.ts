@@ -18,6 +18,7 @@ import { PersistenceService } from 'src/providers/persistence.service';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { FileService } from 'src/providers/file.service';
 import { AudioService } from 'src/providers/audio.service';
+import { UtilService } from 'src/providers/util.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +40,7 @@ import { AudioService } from 'src/providers/audio.service';
     FileService,
     PersistenceService,
     AudioService,
+    UtilService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
