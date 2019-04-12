@@ -2,7 +2,8 @@
 
 
   <div *ngIf="displayMode === constants.DISPLAY_MODES.DETAIL && !editMode">
-    <ion-card *ngFor="let song of songs; let i = index" [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none' }">
+    <ion-card *ngFor="let song of songs; let i = index" (click)="play(i)"
+      [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none' }">
       <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
         <div style="flex: 2;" id="img">
           <img src="../../assets/icon/album.jpg">
@@ -14,7 +15,7 @@
             </div>
           </div>
           <div style="flex: 1; min-height: 34%; max-height: 34%; padding-left: 0.5em; display: flex; flex-direction: row;" class="playlist-item-card">
-            <div style="flex: 1; text-align: center; font-size: 14px; font-weight: 400;">
+            <div style="flex: 1; text-align: center; font-size: 14px; font-weight: 400; line-height: 12px;">
               {{song.size}}
             </div>
             <div style="flex: 2; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
@@ -23,8 +24,9 @@
             <div style="flex: 2; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
               <ion-icon name="time" style="color: #b5c827; font-size: 18px;"></ion-icon> {{song.duration}}
             </div>
-            <div style="flex: 1; text-align: center;">
-              <ion-icon name="heart" style="color: #b5c827; font-size: 18px;"></ion-icon>
+            <div style="flex: 1; text-align: center; margin-top: -0.3em;" (click)="$event.stopPropagation();toggleFavourite(i)">
+              <ion-icon *ngIf="song.favourite" name="heart" style="color: #b5c827; font-size: 18px;"></ion-icon>
+              <ion-icon *ngIf="!song.favourite" name="heart-empty" style="color: #b5c827; font-size: 18px;"></ion-icon>
             </div>
           </div>
         </div>
@@ -33,7 +35,8 @@
   </div>
 
   <div *ngIf="displayMode === constants.DISPLAY_MODES.LIST && !editMode">
-    <ion-card *ngFor="let song of songs; let i = index" [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none' }">
+    <ion-card *ngFor="let song of songs; let i = index" (click)="play(i)"
+      [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none' }">
       <div style="display: flex; flex-direction: column; width: 100%; height: auto;">
         <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
           <div style="flex: 1;" class="playlist-item-top">
@@ -53,8 +56,9 @@
           <div style="flex: 6; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
             <ion-icon name="musical-note" style="color: #b5c827; font-size: 18px;"></ion-icon> <p style="margin: 0; display: inline-block;">{{song.numberOfPlaybacks}}</p>
           </div>
-          <div style="flex: 2; align-items: center; text-align: center;">
-            <ion-icon name="heart" style="color: #b5c827; font-size: 18px;"></ion-icon>
+          <div style="flex: 2; align-items: center; text-align: center;" (click)="$event.stopPropagation();toggleFavourite(i)">
+            <ion-icon *ngIf="song.favourite" name="heart" style="color: #b5c827; font-size: 18px;"></ion-icon>
+            <ion-icon *ngIf="!song.favourite" name="heart-empty" style="color: #b5c827; font-size: 18px;"></ion-icon>
           </div>
         </div>
       </div>

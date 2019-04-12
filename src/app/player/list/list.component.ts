@@ -7,6 +7,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Platform } from '@ionic/angular';
 import { FileService } from 'src/providers/file.service';
 import { AudioService } from 'src/providers/audio.service';
+import { UtilService } from 'src/providers/util.service';
 
 @Component({
   selector: 'app-list',
@@ -28,7 +29,8 @@ export class ListComponent implements AfterContentInit {
   public displayMode: string = this.constants.DISPLAY_MODES.DETAIL; // TODO get from persistence service later
 
   constructor(public fileChooser: FileChooser, public persistenceService: PersistenceService,
-              public keyboard: Keyboard, public platform: Platform, public fileService: FileService, public audioService: AudioService) { }
+              public keyboard: Keyboard, public platform: Platform, public fileService: FileService, public audioService: AudioService,
+              public util: UtilService) { }
 
   ngAfterContentInit() {
     this.persistenceService.getSongs().then(object => {
@@ -153,7 +155,26 @@ export class ListComponent implements AfterContentInit {
     let fileName = fileInfo.name;
     let fileSize = await this.fileService.getFileSize(songURI);
     let duration = await this.audioService.getDuration(mediaPath);
-    console.log(duration);
-    this.songs.push({name: fileName, mediaPath: mediaPath, duration: duration, numberOfPlaybacks: 0, favourite: false, imageURL: null, isMarkedForDeletion: false, size: fileSize});
+    this.songs.push(
+      {
+        name: fileName,
+        mediaPath: mediaPath,
+        duration: this.util.durationToDisplayTime(duration),
+        numberOfPlaybacks: 0,
+        favourite: false,
+        imageURL: null,
+        isMarkedForDeletion: false,
+        size: this.util.convertToDisplaySize(fileSize)
+      }
+    );
+  }
+
+  play(index: number) {
+    console.log('play: ' + index);
+  }
+
+  toggleFavourite(index: number) { // think about efficiency of saving on each favourite click !
+    this.songs[index].favourite = !this.songs[index].favourite
+    this.persistenceService.saveSongs(this.songs);
   }
 }

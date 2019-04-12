@@ -14,7 +14,7 @@ export class UtilService {
         return Math.floor(duration / 60) + `:${seconds}`;
       } else if (duration >= 3600) {
         hours = Math.floor(duration / 3600);
-        minutes = Math.floor((duration - hours * 3600) / 60); 
+        minutes = Math.floor((duration - hours * 3600) / 60);
         minutes < 10 ? minutes = `0${minutes}` : minutes;
         return `${hours}:${minutes}:${seconds}`;
       }
@@ -26,5 +26,16 @@ export class UtilService {
   public isNormalInteger(str) {
     var n = Math.floor(Number(str));
     return n !== Infinity && String(n) === str && n >= 0;
+  }
+
+  public convertToDisplaySize(size: number, precision?: number): string {
+    if (0 === size) {
+      return "0 Bytes";
+    }
+    var c = 1024,
+      d = precision || 2,
+      e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+      f = Math.floor(Math.log(size) / Math.log(c));
+    return parseFloat((size / Math.pow(c, f)).toFixed(d)) + " " + e[f];
   }
 }
