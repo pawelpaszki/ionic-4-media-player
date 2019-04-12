@@ -33,8 +33,9 @@ export class ListComponent implements AfterContentInit {
               public util: UtilService) { }
 
   ngAfterContentInit() {
-    this.persistenceService.getSongs().then(object => {
-      this.songs = object.songs;
+    this.persistenceService.getSongs().then(songs => {
+      console.log(songs);
+      this.songs = songs;
     });
   }
 
@@ -167,14 +168,15 @@ export class ListComponent implements AfterContentInit {
         size: this.util.convertToDisplaySize(fileSize)
       }
     );
+    await this.persistenceService.saveSongs(this.songs);
   }
 
   play(index: number) {
     console.log('play: ' + index);
   }
 
-  toggleFavourite(index: number) { // think about efficiency of saving on each favourite click !
+  async toggleFavourite(index: number) { // think about efficiency of saving on each favourite click !
     this.songs[index].favourite = !this.songs[index].favourite
-    this.persistenceService.saveSongs(this.songs);
+    await this.persistenceService.saveSongs(this.songs);
   }
 }

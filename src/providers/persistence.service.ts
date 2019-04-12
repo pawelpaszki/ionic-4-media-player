@@ -23,14 +23,13 @@ export class PersistenceService {
     return this.storage.get('songs');
   }
 
-  public saveSongs(songs: Song[]) {
-    this.storage.set('songs', songs);
+  public saveSongs(songs: Song[]): Promise<any> {
+    return this.storage.set('songs', songs);
   }
 
   public persistSongs() {
-    let songs = {
-      songs: [ 
-        { name: 'Coma - Sierpien',
+    this.storage.set('songs', [
+      { name: 'Coma - Sierpien',
           mediaPath: 'TBD',
           numberOfPlaybacks: 10,
           imageURL: 'TBD',
@@ -149,10 +148,8 @@ export class PersistenceService {
           size: '6.57 MB',
           duration: '4:15',
           favourite: false,
-          isMarkedForDeletion: false},
-      ]
-    }
-    this.storage.set('songs', songs);
+          isMarkedForDeletion: false}
+    ]);
   }
 
 }
