@@ -152,4 +152,27 @@ export class PersistenceService {
     ]);
   }
 
+  public persistShuffleMode(shuffleOn: boolean) {
+    return this.storage.set('shuffleOn', shuffleOn);
+  }
+
+  public getShuffleMode(): Promise<any> {
+    return this.storage.get('shuffleOn');
+  }
+
+  public persistRepeatMode(repeatMode: string) {
+    return this.storage.set('repeatMode', repeatMode);
+  }
+
+  public getRepeatMode(): Promise<any> {
+    return this.storage.get('repeatMode');
+  }
+
+  public persistSortMode(sortMode: string) {
+    return this.storage.set('sortMode', sortMode);
+  }
+
+  public getSortMode(): Promise<any> {
+    return this.storage.get('sortMode');
+  }
 }

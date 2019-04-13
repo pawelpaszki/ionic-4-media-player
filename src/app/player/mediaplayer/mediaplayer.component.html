@@ -7,19 +7,19 @@
 
     </div>
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeRepeatMode()">
-      <ion-badge *ngIf="repeat === constants.REPEAT_MODES.SELECTED" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
+      <ion-badge *ngIf="repeatMode === constants.REPEAT_MODES.SELECTED" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
           <ion-icon name="bookmark" style="font-size: 12px; position: relative; color: #b5c827; margin-left: -3px;"></ion-icon>
       </ion-badge>
-      <ion-badge *ngIf="repeat === constants.REPEAT_MODES.SONG" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
+      <ion-badge *ngIf="repeatMode === constants.REPEAT_MODES.SONG" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
         <p style="font-size: 12px; position: relative; color: #b5c827; margin-left: -3px;">1</p>
       </ion-badge>
-      <ion-badge *ngIf="repeat === constants.REPEAT_MODES.FAVOURITE" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
+      <ion-badge *ngIf="repeatMode === constants.REPEAT_MODES.FAVOURITE" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
         <ion-icon name="heart" style="font-size: 12px; position: relative; color: #b5c827; margin-left: -3px;"></ion-icon>
       </ion-badge>
-      <ion-badge *ngIf="repeat === constants.REPEAT_MODES.PART_OF_SONG" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
+      <ion-badge *ngIf="repeatMode === constants.REPEAT_MODES.PART_OF_SONG" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
         <ion-icon name="md-time" style="font-size: 12px; position: relative; color: #b5c827; margin-left: -3px;"></ion-icon>
       </ion-badge>
-      <ion-icon [ngStyle]="{'color': repeat !== constants.REPEAT_MODES.NONE ? '#b5c827' : 'white' }" name="repeat" style="position: absolute; right: calc(8.5% - 15px); top: 8px;"></ion-icon>
+      <ion-icon [ngStyle]="{'color': repeatMode !== constants.REPEAT_MODES.NONE ? '#b5c827' : 'white' }" name="repeat" style="position: absolute; right: calc(8.5% - 15px); top: 8px;"></ion-icon>
     </div>
   </div>
   <div style="height: 100%; width: 100%; background: yellow;">

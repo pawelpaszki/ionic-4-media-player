@@ -34,8 +34,14 @@ export class ListComponent implements AfterContentInit {
 
   ngAfterContentInit() {
     this.persistenceService.getSongs().then(songs => {
-      console.log(songs);
       this.songs = songs;
+      this.persistenceService.getSortMode().then(sortBy => {
+        console.log('sortBy: ' + sortBy);
+        this.sortBy = sortBy !== undefined && sortBy !== null ? sortBy : this.sortModes[0];
+        if (this.sortBy !== this.sortModes[0]) {
+          this.sortSongs();
+        }
+      });
     });
   }
 
@@ -102,6 +108,7 @@ export class ListComponent implements AfterContentInit {
         this.sortBy = this.sortModes[currentSortIndex + 1];
       }
     }
+    this.persistenceService.persistSortMode(this.sortBy);
     this.sortSongs();
   }
 

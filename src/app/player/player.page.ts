@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class PlayerPage {
 
-  public visibleTab: string = 'list';
+  public visibleTab: string = 'player';
   public segmentChanged(ev: any) {
     this.visibleTab = ev.detail.value;
   }

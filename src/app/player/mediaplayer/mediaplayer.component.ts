@@ -3,6 +3,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Platform } from '@ionic/angular';
 import { UtilService } from 'src/providers/util.service';
 import * as Data from '../../../AppConstants';
+import { PersistenceService } from 'src/providers/persistence.service';
 
 @Component({
   selector: 'app-mediaplayer',
@@ -17,12 +18,23 @@ export class MediaplayerComponent implements OnInit {
   public max: number = 100;
   public constants = Data;
   public repeatModes: string[] = Object.values(this.constants.REPEAT_MODES);
-  public repeat: string = this.repeatModes[0];// TODO get from persistence service later
+  public repeatMode: string = this.repeatModes[0];// TODO get from persistence service later
   public currentRepeatIndex: number = 0;
 
-  constructor(public keyboard: Keyboard, public platform: Platform, public util: UtilService) { }
+  constructor(public keyboard: Keyboard, public platform: Platform, public util: UtilService,
+              public persistenceService: PersistenceService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.persistenceService.getShuffleMode().then(shuffleOn => {
+      console.log('shuffle on: ' + shuffleOn);
+      this.shuffle = shuffleOn !== undefined && shuffleOn !== null ? shuffleOn : false;
+    });
+
+    this.persistenceService.getRepeatMode().then(repeatMode => {
+      console.log('repeatMode: ' + repeatMode);
+      this.repeatMode = repeatMode !== undefined && repeatMode !== null ? repeatMode : this.repeatModes[0];
+    });
+  }
 
   stop() {
     console.log('stop');
@@ -44,18 +56,20 @@ export class MediaplayerComponent implements OnInit {
     this.progress = event.detail.value;
   }
 
-  toggleShuffle() {
-    this.shuffle = !this.shuffle; // persist later
+  async toggleShuffle() {
+    this.shuffle = !this.shuffle;
+    await this.persistenceService.persistShuffleMode(this.shuffle);
   }
 
-  changeRepeatMode() {
+  async changeRepeatMode() {
     if (this.repeatModes !== undefined && this.repeatModes !== null && this.repeatModes.length > 1) {
-      const currentRepeatIndex = this.repeatModes.indexOf(this.repeat);
+      const currentRepeatIndex = this.repeatModes.indexOf(this.repeatMode);
       if (currentRepeatIndex === this.repeatModes.length - 1) {
-        this.repeat = this.repeatModes[0];
+        this.repeatMode = this.repeatModes[0];
       } else {
-        this.repeat = this.repeatModes[currentRepeatIndex + 1];
+        this.repeatMode = this.repeatModes[currentRepeatIndex + 1];
       }
+      this.persistenceService.persistRepeatMode(this.repeatMode);
     }
   }
 
