@@ -21,6 +21,7 @@ npm-debug.log*
 coverage/
 www/
 node_modules/
+package-lock.json
 tmp/
 temp/
 platforms/
