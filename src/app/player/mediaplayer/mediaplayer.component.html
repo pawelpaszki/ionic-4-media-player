@@ -22,11 +22,11 @@
       <ion-icon [ngStyle]="{'color': repeatMode !== constants.REPEAT_MODES.NONE ? '#b5c827' : 'white' }" name="repeat" style="position: absolute; right: calc(8.5% - 15px); top: 8px;"></ion-icon>
     </div>
   </div>
-  <div style="height: 100%; width: 100%; background: yellow;">
-whateva
+  <div id="albumPhoto">
+    <img id="image" src="../../assets/icon/skull_icon.png">
   </div>
   <div style="position: fixed; bottom: 120px; left: 0; height: 40px; width: 100%; background: white; display: flex; flex-direction: row; align-items: center; text-align: center;"
-  [ngStyle]="{ 'bottom': platform.is('android') && keyboard.isVisible ? '50px' : '110px' }">
+  [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '50px' : '110px' }">
     <ion-range [min]=0 [max]=max step="1" (ionChange)="updateProgress($event)">
       <ion-icon size="small" slot="start" name="sunny"></ion-icon>
       <ion-icon slot="end" name="sunny"></ion-icon>
@@ -44,7 +44,7 @@ whateva
     </div>
   </div>
   <div style="position: fixed; bottom: 60px; left: 0; height: 50px; width: 100%; background: #282828; display: flex; flex-direction: row; align-items: center; text-align: center;"
-  [ngStyle]="{ 'bottom': platform.is('android') && keyboard.isVisible ? '0' : '60px' }">
+  [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '0' : '60px' }">
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
       <ion-icon name="skip-backward" (click)="previous()"></ion-icon>
     </div>

@@ -12,13 +12,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
-import { Media, MediaObject } from '@ionic-native/media/ngx';
+import { Media } from '@ionic-native/media/ngx';
 import { IonicStorageModule } from '@ionic/storage';
 import { PersistenceService } from 'src/providers/persistence.service';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { FileService } from 'src/providers/file.service';
 import { AudioService } from 'src/providers/audio.service';
 import { UtilService } from 'src/providers/util.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +42,7 @@ import { UtilService } from 'src/providers/util.service';
     PersistenceService,
     AudioService,
     UtilService,
+    ScreenOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

@@ -94,7 +94,7 @@
   </ion-list>
 
   <div *ngIf="!editMode && !searchEnabled" style="position: fixed; bottom: 60px; left: 0; height: 50px; width: 100%; background: #282828; display: flex; flex-direction: row; align-items: center; text-align: center;"
-    [ngStyle]="{ 'bottom': platform.is('android') && keyboard.isVisible ? '0' : '60px' }">
+    [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '0' : '60px' }">
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
       <ion-icon name="md-add-circle" (click)="addFile()"></ion-icon>
     </div>
@@ -130,7 +130,7 @@
     </div>
   </div>
   <div *ngIf="!editMode && searchEnabled" style="position: fixed; bottom: 60px; left: 0; height: 50px; width: 100%; background: #282828; display: flex; flex-direction: row; align-items: center; text-align: center;"
-    [ngStyle]="{ 'bottom': platform.is('android') && keyboard.isVisible ? '0' : '60px' }">
+    [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '0' : '60px' }">
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
       <ion-icon name="md-close" (click)="toggleSearch()"></ion-icon>
     </div>

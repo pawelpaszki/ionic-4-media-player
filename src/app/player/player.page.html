@@ -12,10 +12,10 @@
 </ion-header>
 
 <ion-content>
-  <app-mediaplayer *ngIf="visibleTab === 'player'">
+  <app-mediaplayer [style.display]="getDisplayType('player')">
   
   </app-mediaplayer>
-  <app-list *ngIf="visibleTab === 'list'">
+  <app-list [style.display]="getDisplayType('list')">
 
   </app-list>
 

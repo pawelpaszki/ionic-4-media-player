@@ -18,7 +18,7 @@ export class MediaplayerComponent implements OnInit {
   public max: number = 100;
   public constants = Data;
   public repeatModes: string[] = Object.values(this.constants.REPEAT_MODES);
-  public repeatMode: string = this.repeatModes[0];// TODO get from persistence service later
+  public repeatMode: string = this.repeatModes[0];
   public currentRepeatIndex: number = 0;
 
   constructor(public keyboard: Keyboard, public platform: Platform, public util: UtilService,
@@ -34,6 +34,9 @@ export class MediaplayerComponent implements OnInit {
       console.log('repeatMode: ' + repeatMode);
       this.repeatMode = repeatMode !== undefined && repeatMode !== null ? repeatMode : this.repeatModes[0];
     });
+    setTimeout(() => {
+      this.setAlbumIconAreaHeight();
+    }, 100);
   }
 
   stop() {
@@ -41,6 +44,7 @@ export class MediaplayerComponent implements OnInit {
   }
 
   play() {
+    this.isPlaying = !this.isPlaying;
     console.log('play');
   }
 
@@ -70,6 +74,34 @@ export class MediaplayerComponent implements OnInit {
         this.repeatMode = this.repeatModes[currentRepeatIndex + 1];
       }
       this.persistenceService.persistRepeatMode(this.repeatMode);
+    }
+  }
+
+  setAlbumIconAreaHeight() {
+    const bodyHeight = document.body.scrollHeight;
+    const bodyWidth = document.body.scrollWidth;
+    const toolbarHeight = 60;
+    const tabBarHeight = 60;
+    const mediaProgressHeight = 60;
+    const topFunctionBarHeight = 40;
+    const playControlsHeight = 50;
+    const albumAreaHeight = bodyHeight - toolbarHeight - tabBarHeight - mediaProgressHeight - topFunctionBarHeight - playControlsHeight;
+
+    console.log('albumAreaHeight: ' + albumAreaHeight);
+    let albumPhotoArea = document.getElementById('albumPhoto');
+    let albumImage = document.getElementById('image');
+    albumPhotoArea.style.height = `${albumAreaHeight}px`;
+    albumPhotoArea.style.top = `${topFunctionBarHeight}px`;
+    if (albumAreaHeight > bodyWidth) {
+      albumImage.style.height = `${bodyWidth}px`;
+      albumImage.style.width = `${bodyWidth}px`;
+      let topPosition = (albumAreaHeight - bodyWidth) / 2;
+      albumImage.style.top = `${topPosition}px`;
+    } else if (bodyWidth > albumAreaHeight) {
+      albumImage.style.height = `${albumAreaHeight}px`;
+      albumImage.style.width = `${albumAreaHeight}px`;
+      let leftPosition = (bodyWidth - albumAreaHeight) / 2;
+      albumImage.style.left = `${leftPosition}px`;
     }
   }
 

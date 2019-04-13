@@ -36,7 +36,6 @@ export class ListComponent implements AfterContentInit {
     this.persistenceService.getSongs().then(songs => {
       this.songs = songs;
       this.persistenceService.getSortMode().then(sortBy => {
-        console.log('sortBy: ' + sortBy);
         this.sortBy = sortBy !== undefined && sortBy !== null ? sortBy : this.sortModes[0];
         if (this.sortBy !== this.sortModes[0]) {
           this.sortSongs();
@@ -108,35 +107,30 @@ export class ListComponent implements AfterContentInit {
         this.sortBy = this.sortModes[currentSortIndex + 1];
       }
     }
-    this.persistenceService.persistSortMode(this.sortBy);
     this.sortSongs();
+    this.persistenceService.persistSortMode(this.sortBy);
   }
 
   sortSongs() {
     switch (this.sortBy) { // 'NAME_ASCENDING' | 'NAME_DESCENDING' | 'PLAYED_ASCENDING' | 'PLAYED_DESCENDING'
       case this.sortModes[0]: {
         // do nothing - no sort
-        console.log(this.sortModes[0]);
         break;
       }
       case this.sortModes[1]: {
-        console.log(this.sortModes[1]);
         this.songs.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
         break;
       }
       case this.sortModes[2]: {
-        console.log(this.sortModes[2]);
         this.songs.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
         this.songs.reverse();
         break;
       }
       case this.sortModes[3]: {
-        console.log(this.sortModes[3]);
         this.songs.sort((a,b) => (a.numberOfPlaybacks > b.numberOfPlaybacks) ? 1 : ((b.numberOfPlaybacks > a.numberOfPlaybacks) ? -1 : 0));
         break;
       }
       case this.sortModes[4]: {
-        console.log(this.sortModes[4]);
         this.songs.sort((a,b) => (a.numberOfPlaybacks > b.numberOfPlaybacks) ? 1 : ((b.numberOfPlaybacks > a.numberOfPlaybacks) ? -1 : 0));
         this.songs.reverse();
         break;

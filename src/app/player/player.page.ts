@@ -15,4 +15,8 @@ export class PlayerPage {
   public changeTab(value: string) {
     this.visibleTab = value;
   }
+
+  getDisplayType(value: string) {
+    return value === this.visibleTab ? 'block' : 'none';
+  }
 }
