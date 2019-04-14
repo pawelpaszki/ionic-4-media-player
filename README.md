@@ -61,15 +61,15 @@ ionic cordova run android -l
     * favourite flag
     * markedForDeletion flag
     * duration and more
-  * shuffle (on or off) (TBD)
-  * repeat mode: (TBD)
+  * shuffle (on or off)
+  * repeat mode:
     * none
     * song
     * favourite
     * selected songs (select option available in the player component)
     * all
     * part of the song (it can be set to loop through the part of the song by specifying start and end)
-  * selected sort (if any) (TBD)
+  * selected sort (if any)
 * different repeat modes (see repeat mode in the Persistence above) (UI DONE, functionality TBD)
 * turn off timer (specifies when the media playing is to be stopped) (TBD)
 

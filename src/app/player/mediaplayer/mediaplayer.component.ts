@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { UtilService } from 'src/providers/util.service';
 import * as Data from '../../../AppConstants';
 import { PersistenceService } from 'src/providers/persistence.service';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 @Component({
   selector: 'app-mediaplayer',
@@ -22,7 +23,7 @@ export class MediaplayerComponent implements OnInit {
   public currentRepeatIndex: number = 0;
 
   constructor(public keyboard: Keyboard, public platform: Platform, public util: UtilService,
-              public persistenceService: PersistenceService) { }
+              public persistenceService: PersistenceService, public backgroundMode: BackgroundMode) { }
 
   ngOnInit() {
     this.persistenceService.getShuffleMode().then(shuffleOn => {
@@ -46,6 +47,11 @@ export class MediaplayerComponent implements OnInit {
   play() {
     this.isPlaying = !this.isPlaying;
     console.log('play');
+    if (this.isPlaying) {
+      this.backgroundMode.enable();
+    } else {
+      this.backgroundMode.disable();
+    }
   }
 
   previous() {
@@ -87,7 +93,6 @@ export class MediaplayerComponent implements OnInit {
     const playControlsHeight = 50;
     const albumAreaHeight = bodyHeight - toolbarHeight - tabBarHeight - mediaProgressHeight - topFunctionBarHeight - playControlsHeight;
 
-    console.log('albumAreaHeight: ' + albumAreaHeight);
     let albumPhotoArea = document.getElementById('albumPhoto');
     let albumImage = document.getElementById('image');
     albumPhotoArea.style.height = `${albumAreaHeight}px`;

@@ -11,7 +11,9 @@ export class AudioService {
 
   getDuration(mediaPath: string): Promise<any> {
     const p: Promise<any> = new Promise((resolve, reject) => {
-      if (this.mediaObj) this.mediaObj.release();
+      if (this.mediaObj) {
+        this.mediaObj.release();
+      }
       this.mediaObj = this.media.create(mediaPath);
       this.mediaObj.play();
       this.mediaObj.setVolume(0);
@@ -24,4 +26,6 @@ export class AudioService {
     });
     return p;
   }
+
+  
 }
