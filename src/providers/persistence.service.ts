@@ -16,7 +16,7 @@ export interface Song {
 export class PersistenceService {
 
   constructor(private storage: Storage) {
-    this.persistSongs(); // remove later
+    //this.persistSongs(); // remove later
   }
   
   public getSongs(): Promise<any> {
