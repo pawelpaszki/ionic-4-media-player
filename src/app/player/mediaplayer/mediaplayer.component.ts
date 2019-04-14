@@ -5,6 +5,7 @@ import { UtilService } from 'src/providers/util.service';
 import * as Data from '../../../AppConstants';
 import { PersistenceService } from 'src/providers/persistence.service';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { Events } from '@ionic/angular';
 
 @Component({
   selector: 'app-mediaplayer',
@@ -23,7 +24,17 @@ export class MediaplayerComponent implements OnInit {
   public currentRepeatIndex: number = 0;
 
   constructor(public keyboard: Keyboard, public platform: Platform, public util: UtilService,
-              public persistenceService: PersistenceService, public backgroundMode: BackgroundMode) { }
+              public persistenceService: PersistenceService, public backgroundMode: BackgroundMode,
+              public events: Events) { 
+
+    events.subscribe('playback:init', (songs, index) => {
+      // user and time are the same arguments passed in `events.publish(user, time)`
+      console.log('Playback init detected. Index:' + index);
+      console.log('songs');
+      console.log(songs);
+    });
+
+  }
 
   ngOnInit() {
     this.persistenceService.getShuffleMode().then(shuffleOn => {

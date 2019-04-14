@@ -8,6 +8,7 @@ import { Platform } from '@ionic/angular';
 import { FileService } from 'src/providers/file.service';
 import { AudioService } from 'src/providers/audio.service';
 import { UtilService } from 'src/providers/util.service';
+import { Events } from '@ionic/angular';
 
 @Component({
   selector: 'app-list',
@@ -30,7 +31,7 @@ export class ListComponent implements AfterContentInit {
 
   constructor(public fileChooser: FileChooser, public persistenceService: PersistenceService,
               public keyboard: Keyboard, public platform: Platform, public fileService: FileService, public audioService: AudioService,
-              public util: UtilService) { }
+              public util: UtilService, public events: Events) { }
 
   ngAfterContentInit() {
     this.persistenceService.getSongs().then(songs => {
@@ -174,6 +175,7 @@ export class ListComponent implements AfterContentInit {
 
   play(index: number) {
     console.log('play: ' + index);
+    this.events.publish('playback:init', this.songs, index);
   }
 
   async toggleFavourite(index: number) { // think about efficiency of saving on each favourite click !
