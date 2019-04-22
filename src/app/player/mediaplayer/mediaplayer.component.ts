@@ -3,9 +3,10 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Platform } from '@ionic/angular';
 import { UtilService } from 'src/providers/util.service';
 import * as Data from '../../../AppConstants';
-import { PersistenceService } from 'src/providers/persistence.service';
+import { PersistenceService, Song } from 'src/providers/persistence.service';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { Events } from '@ionic/angular';
+import { AudioService } from 'src/providers/audio.service';
 
 @Component({
   selector: 'app-mediaplayer',
@@ -17,21 +18,22 @@ export class MediaplayerComponent implements OnInit {
   public shuffle: boolean = false; // save and retrieve from local storage
   public isPlaying: boolean = false;
   public progress: number = 0;
-  public max: number = 100;
+  public max: number = 0;
   public constants = Data;
   public repeatModes: string[] = Object.values(this.constants.REPEAT_MODES);
   public repeatMode: string = this.repeatModes[0];
   public currentRepeatIndex: number = 0;
+  public songs: Song[];
+  public currentlyPlayedSong: Song;
 
   constructor(public keyboard: Keyboard, public platform: Platform, public util: UtilService,
               public persistenceService: PersistenceService, public backgroundMode: BackgroundMode,
-              public events: Events) { 
+              public events: Events, public audioService: AudioService) { 
 
     events.subscribe('playback:init', (songs, index) => {
       // user and time are the same arguments passed in `events.publish(user, time)`
-      console.log('Playback init detected. Index:' + index);
-      console.log('songs');
-      console.log(songs);
+      this.songs = songs;
+      this.play(songs[index]);
     });
 
   }
@@ -55,14 +57,43 @@ export class MediaplayerComponent implements OnInit {
     console.log('stop');
   }
 
-  play() {
-    this.isPlaying = !this.isPlaying;
-    console.log('play');
-    if (this.isPlaying) {
-      this.backgroundMode.enable();
+  play(song: Song) {
+    if (song === null) {
+      this.audioService.unpause();
     } else {
-      this.backgroundMode.disable();
+      this.currentlyPlayedSong = song;
+      this.audioService.startPlayback(song.mediaPath);
+      this.max = song.duration;
+      this.progress = 0;
     }
+    this.isPlaying = true;
+    console.log('play');
+    this.backgroundMode.enable();
+    this.getProgress();
+  }
+
+  async getProgress() {
+    if (this.isPlaying) {
+      const tempProgress = await this.audioService.getProgress();
+      this.progress = tempProgress > 0 ? Math.floor(tempProgress) : 0;
+      if (this.progress > this.currentlyPlayedSong.duration) {
+        this.playNextSong();
+      } else {
+        setTimeout(() => {
+          this.getProgress();
+        }, 200);
+      }
+    }
+  }
+
+  playNextSong() {
+    // repeat song or only one song - play the same
+  }
+
+  pause() {
+    this.audioService.pause();
+    this.isPlaying = false;
+    this.backgroundMode.disable();
   }
 
   previous() {
@@ -73,8 +104,13 @@ export class MediaplayerComponent implements OnInit {
     console.log('next');
   }
 
-  updateProgress(event) {
-    this.progress = event.detail.value;
+  async updateProgress(event) {
+    const tempProgress = await this.audioService.getProgress();
+    const roundedProgress = tempProgress > 0 ? Math.floor(tempProgress) : 0;
+    if (Math.floor(Math.abs(event.detail.value - roundedProgress)) > 1) {
+      this.progress = event.detail.value;
+      this.audioService.seekTo(this.progress * 1000);
+    }
   }
 
   async toggleShuffle() {

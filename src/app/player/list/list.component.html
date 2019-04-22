@@ -24,7 +24,7 @@
               <ion-icon name="musical-note" style="color: #b5c827; font-size: 18px;"></ion-icon> <p style="margin: 0; display: inline-block;">{{song.numberOfPlaybacks}}</p>
             </div>
             <div style="flex: 2; font-size: 16px; font-weight: 700; text-align: center; margin-top: -0.3em;">
-              <ion-icon name="time" style="color: #b5c827; font-size: 18px;"></ion-icon> {{song.duration}}
+              <ion-icon name="time" style="color: #b5c827; font-size: 18px;"></ion-icon> {{util.durationToDisplayTime(song.duration)}}
             </div>
             <div style="flex: 1; text-align: center; margin-top: -0.3em;" (click)="$event.stopPropagation();toggleFavourite(i)">
               <ion-icon *ngIf="song.favourite" name="heart" style="color: #b5c827; font-size: 18px;"></ion-icon>

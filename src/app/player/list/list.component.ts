@@ -26,7 +26,7 @@ export class ListComponent implements AfterContentInit {
   public songs: Song[] = [];
   public constants = Data;
   public sortModes: string[] = Object.values(this.constants.SORT_MODES);
-  public sortBy: string = this.sortModes[0];// TODO get from persistence service later
+  public sortBy: string = this.sortModes[0];
   public displayMode: string = this.constants.DISPLAY_MODES.DETAIL; // TODO get from persistence service later
 
   constructor(public fileChooser: FileChooser, public persistenceService: PersistenceService,
@@ -34,15 +34,17 @@ export class ListComponent implements AfterContentInit {
               public util: UtilService, public events: Events) { }
 
   ngAfterContentInit() {
-    this.persistenceService.getSongs().then(songs => {
-      this.songs = songs;
-      this.persistenceService.getSortMode().then(sortBy => {
-        this.sortBy = sortBy !== undefined && sortBy !== null ? sortBy : this.sortModes[0];
-        if (this.sortBy !== this.sortModes[0]) {
-          this.sortSongs();
-        }
+    setTimeout(() => {
+      this.persistenceService.getSongs().then(songs => {
+        this.songs = songs;
+        this.persistenceService.getSortMode().then(sortBy => {
+          this.sortBy = sortBy !== undefined && sortBy !== null ? sortBy : this.sortModes[0];
+          if (this.sortBy !== this.sortModes[0]) {
+            this.sortSongs();
+          }
+        });
       });
-    });
+    }, 100);
   }
 
   changeDisplayMode() {
@@ -58,13 +60,15 @@ export class ListComponent implements AfterContentInit {
     this.songs.splice(event.detail.to, 0, itemToMove);
     event.detail.complete();
     this.sortBy = this.sortModes[0]; // no sort after rearranging
+    this.persistenceService.persistSortMode(this.sortBy);
   }
 
-  toggleEditMode() {
+  async toggleEditMode() {
     this.editMode = !this.editMode;
     if (!this.editMode) {
       this.reorderingEnabled = false;
       this.deletionEnabled = false;
+      await this.persistenceService.saveSongs(this.songs);
     }
   }
 
@@ -162,7 +166,7 @@ export class ListComponent implements AfterContentInit {
       {
         name: fileName,
         mediaPath: mediaPath,
-        duration: this.util.durationToDisplayTime(duration),
+        duration: duration,
         numberOfPlaybacks: 0,
         favourite: false,
         imageURL: null,
