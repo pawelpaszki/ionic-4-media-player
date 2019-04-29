@@ -25,6 +25,7 @@ export class MediaplayerComponent implements OnInit {
   public currentRepeatIndex: number = 0;
   public songs: Song[];
   public currentlyPlayedSong: Song;
+  public canSeek: boolean = true;
 
   constructor(public keyboard: Keyboard, public platform: Platform, public util: UtilService,
               public persistenceService: PersistenceService, public backgroundMode: BackgroundMode,
@@ -35,7 +36,19 @@ export class MediaplayerComponent implements OnInit {
       this.songs = songs;
       this.play(songs[index]);
     });
+    platform.pause.subscribe((result)=>{
+      this.canSeek = false;
+      console.log('canSeek: ' + this.canSeek);
+    });
+    platform.resume.subscribe((result)=>{
+      this.canSeek = true;
+      console.log('canSeek: ' + this.canSeek);
+    });
 
+  }
+
+  ionViewWillLeave() {
+    this.canSeek = false;
   }
 
   ngOnInit() {
@@ -69,6 +82,7 @@ export class MediaplayerComponent implements OnInit {
     this.isPlaying = true;
     console.log('play');
     this.backgroundMode.enable();
+    this.backgroundMode.disableWebViewOptimizations();
     this.getProgress();
   }
 
@@ -107,7 +121,7 @@ export class MediaplayerComponent implements OnInit {
   async updateProgress(event) {
     const tempProgress = await this.audioService.getProgress();
     const roundedProgress = tempProgress > 0 ? Math.floor(tempProgress) : 0;
-    if (Math.floor(Math.abs(event.detail.value - roundedProgress)) > 1) {
+    if (Math.floor(Math.abs(event.detail.value - roundedProgress)) > 1 && this.canSeek) {
       this.progress = event.detail.value;
       this.audioService.seekTo(this.progress * 1000);
     }
