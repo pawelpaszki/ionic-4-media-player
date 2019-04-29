@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
+import { Song } from './persistence.service';
 
 @Injectable()
 export class AudioService { 
 
   mediaObj: MediaObject;
+  private songs: Song[];
+  private currentSongIndex: number;
   constructor(public media: Media) {
 
   }
@@ -45,10 +48,27 @@ export class AudioService {
     }
   }
 
-  startPlayback(mediaPath: string) {
+  playNext() {
+    if (this.currentSongIndex === this.songs.length - 1) {
+      this.currentSongIndex = 0;
+    } else {
+      this.currentSongIndex = this.currentSongIndex + 1;
+    }
+    this.startPlayback(this.currentSongIndex, this.songs[this.currentSongIndex].mediaPath, this.songs);
+  }
+
+  startPlayback(index: number, mediaPath: string, songs: Song[]) {
+    this.currentSongIndex = index;
+    this.songs = songs;
     this.mediaObj = this.media.create(mediaPath);
     this.mediaObj.play();
     this.mediaObj.setVolume(1);
+    this.mediaObj.onStatusUpdate.subscribe(status => {
+      if (status === 4) {
+        this.stopPlayback();
+        this.playNext();
+      }
+    });
   }
 
   seekTo(value: number) {
@@ -61,10 +81,12 @@ export class AudioService {
     this.mediaObj.pause();
   }
 
-  // stopPlayback() {
-  //   this.mediaObj.stop();
-  //   this.mediaObj.release();
-  // }
+  stopPlayback() {
+    if (this.mediaObj !== undefined) {
+      this.mediaObj.stop();
+      this.mediaObj.release();
+    }
+  }
 
   
 }

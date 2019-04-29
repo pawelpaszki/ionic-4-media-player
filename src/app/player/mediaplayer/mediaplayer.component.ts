@@ -32,9 +32,9 @@ export class MediaplayerComponent implements OnInit {
               public events: Events, public audioService: AudioService) { 
 
     events.subscribe('playback:init', (songs, index) => {
-      // user and time are the same arguments passed in `events.publish(user, time)`
+      // user and time are the same arguments passed in `events.publish(songs, index)`
       this.songs = songs;
-      this.play(songs[index]);
+      this.play(index, songs);
     });
     platform.pause.subscribe((result)=>{
       this.canSeek = false;
@@ -70,13 +70,13 @@ export class MediaplayerComponent implements OnInit {
     console.log('stop');
   }
 
-  play(song: Song) {
-    if (song === null) {
+  play(index: number, songs: Song[]) {
+    if (songs === null || index === null) {
       this.audioService.unpause();
     } else {
-      this.currentlyPlayedSong = song;
-      this.audioService.startPlayback(song.mediaPath);
-      this.max = song.duration;
+      this.currentlyPlayedSong = songs[index];
+      this.audioService.startPlayback(index, songs[index].mediaPath, this.songs);
+      this.max = this.currentlyPlayedSong.duration;
       this.progress = 0;
     }
     this.isPlaying = true;

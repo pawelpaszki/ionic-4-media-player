@@ -155,26 +155,30 @@ export class ListComponent implements AfterContentInit {
   }
 
   async addFile() {
-    let songURI = await this.fileService.openFile();
-    let nativePath = await this.fileService.getNativePath(songURI);
-    let fileInfo = await this.fileService.getFileInfo(nativePath);
-    let mediaPath = nativePath.replace(/file:\/\//g, '');
-    let fileName = fileInfo.name;
-    let fileSize = await this.fileService.getFileSize(songURI);
-    let duration = await this.audioService.getDuration(mediaPath);
-    this.songs.push(
-      {
-        name: fileName,
-        mediaPath: mediaPath,
-        duration: duration,
-        numberOfPlaybacks: 0,
-        favourite: false,
-        imageURL: null,
-        isMarkedForDeletion: false,
-        size: this.util.convertToDisplaySize(fileSize)
-      }
-    );
-    await this.persistenceService.saveSongs(this.songs);
+    try {
+      let songURI = await this.fileService.openFile();
+      let nativePath = await this.fileService.getNativePath(songURI);
+      let fileInfo = await this.fileService.getFileInfo(nativePath);
+      let mediaPath = nativePath.replace(/file:\/\//g, '');
+      let fileName = fileInfo.name;
+      let fileSize = await this.fileService.getFileSize(songURI);
+      let duration = await this.audioService.getDuration(mediaPath);
+      this.songs.push(
+        {
+          name: fileName,
+          mediaPath: mediaPath,
+          duration: duration,
+          numberOfPlaybacks: 0,
+          favourite: false,
+          imageURL: null,
+          isMarkedForDeletion: false,
+          size: this.util.convertToDisplaySize(fileSize)
+        }
+      );
+      await this.persistenceService.saveSongs(this.songs);
+    } catch (error) {
+      console.log(error.toString());
+    }
   }
 
   play(index: number) {
