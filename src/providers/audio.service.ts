@@ -8,6 +8,7 @@ export class AudioService {
   mediaObj: MediaObject;
   private songs: Song[];
   private currentSongIndex: number;
+  private ignoreStopSubscriber: boolean = false;
   constructor(public media: Media) {
 
   }
@@ -57,6 +58,15 @@ export class AudioService {
     this.startPlayback(this.currentSongIndex, this.songs[this.currentSongIndex].mediaPath, this.songs);
   }
 
+  playPrevious() {
+    if (this.currentSongIndex === 0) {
+      this.currentSongIndex = this.songs.length - 1;
+    } else {
+      this.currentSongIndex = this.currentSongIndex - 1;
+    }
+    this.startPlayback(this.currentSongIndex, this.songs[this.currentSongIndex].mediaPath, this.songs);
+  }
+
   startPlayback(index: number, mediaPath: string, songs: Song[]) {
     this.currentSongIndex = index;
     this.songs = songs;
@@ -65,8 +75,12 @@ export class AudioService {
     this.mediaObj.setVolume(1);
     this.mediaObj.onStatusUpdate.subscribe(status => {
       if (status === 4) {
-        this.stopPlayback();
-        this.playNext();
+        if (!this.ignoreStopSubscriber) {
+          this.stopPlayback();
+          this.playNext();
+        } else {
+          this.ignoreStopSubscriber = false;
+        }
       }
     });
   }
@@ -82,11 +96,16 @@ export class AudioService {
   }
 
   stopPlayback() {
+    this.ignoreStopSubscriber = true;
+    console.log('in stop: ignoreStopSubscriber');
     if (this.mediaObj !== undefined) {
       this.mediaObj.stop();
       this.mediaObj.release();
     }
   }
 
+  getCurrentlyPlayedSong() {
+    return this.songs[this.currentSongIndex];
+  }
   
 }

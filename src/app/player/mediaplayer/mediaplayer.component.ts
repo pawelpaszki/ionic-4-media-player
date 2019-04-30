@@ -75,6 +75,7 @@ export class MediaplayerComponent implements OnInit {
       this.audioService.unpause();
     } else {
       this.currentlyPlayedSong = songs[index];
+      this.audioService.stopPlayback();
       this.audioService.startPlayback(index, songs[index].mediaPath, this.songs);
       this.max = this.currentlyPlayedSong.duration;
       this.progress = 0;
@@ -89,19 +90,15 @@ export class MediaplayerComponent implements OnInit {
   async getProgress() {
     if (this.isPlaying) {
       const tempProgress = await this.audioService.getProgress();
+      this.currentlyPlayedSong = this.audioService.getCurrentlyPlayedSong();
+      this.max = this.currentlyPlayedSong.duration;
       this.progress = tempProgress > 0 ? Math.floor(tempProgress) : 0;
-      if (this.progress > this.currentlyPlayedSong.duration) {
-        this.playNextSong();
-      } else {
+      if (!(this.progress > this.currentlyPlayedSong.duration)) {
         setTimeout(() => {
           this.getProgress();
-        }, 200);
+        }, 500);
       }
     }
-  }
-
-  playNextSong() {
-    // repeat song or only one song - play the same
   }
 
   pause() {
@@ -111,11 +108,13 @@ export class MediaplayerComponent implements OnInit {
   }
 
   previous() {
-    console.log('previous');
+    this.audioService.stopPlayback();
+    this.audioService.playPrevious();
   }
 
   next() {
-    console.log('next');
+    this.audioService.stopPlayback();
+    this.audioService.playNext();
   }
 
   async updateProgress(event) {
