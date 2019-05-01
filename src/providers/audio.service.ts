@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
-import { Song } from './persistence.service';
+import { Song } from '../interfaces/song';
 
 @Injectable()
 export class AudioService { 
@@ -50,27 +50,27 @@ export class AudioService {
   }
 
   playNext() {
-    if (this.currentSongIndex === this.songs.length - 1) {
+    if (this.currentSongIndex > this.songs.length - 2) {
       this.currentSongIndex = 0;
     } else {
       this.currentSongIndex = this.currentSongIndex + 1;
     }
-    this.startPlayback(this.currentSongIndex, this.songs[this.currentSongIndex].mediaPath, this.songs);
+    this.startPlayback( this.songs[this.currentSongIndex].id, this.songs);
   }
 
   playPrevious() {
-    if (this.currentSongIndex === 0) {
+    if (this.currentSongIndex === 0 || this.currentSongIndex > this.songs.length - 2) {
       this.currentSongIndex = this.songs.length - 1;
     } else {
       this.currentSongIndex = this.currentSongIndex - 1;
     }
-    this.startPlayback(this.currentSongIndex, this.songs[this.currentSongIndex].mediaPath, this.songs);
+    this.startPlayback( this.songs[this.currentSongIndex].id, this.songs);
   }
 
-  startPlayback(index: number, mediaPath: string, songs: Song[]) {
-    this.currentSongIndex = index;
+  startPlayback(id: number, songs: Song[]) {
     this.songs = songs;
-    this.mediaObj = this.media.create(mediaPath);
+    this.currentSongIndex = this.getSongIndex(id);
+    this.mediaObj = this.media.create(this.songs[this.currentSongIndex].mediaPath);
     this.mediaObj.play();
     this.mediaObj.setVolume(1);
     this.mediaObj.onStatusUpdate.subscribe(status => {
@@ -89,6 +89,15 @@ export class AudioService {
     if (this.mediaObj !== undefined) {
       return this.mediaObj.seekTo(value);
     }
+  }
+
+  private getSongIndex(id: number) {
+    for (let i = 0; i < this.songs.length; i++) {
+      if (this.songs[i].id === id) {
+        return this.songs[i].id;
+      }
+    }
+    return 0;
   }
 
   pause() {

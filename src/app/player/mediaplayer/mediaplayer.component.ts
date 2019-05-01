@@ -3,10 +3,11 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Platform } from '@ionic/angular';
 import { UtilService } from 'src/providers/util.service';
 import * as Data from '../../../AppConstants';
-import { PersistenceService, Song } from 'src/providers/persistence.service';
+import { PersistenceService } from 'src/providers/persistence.service';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { Events } from '@ionic/angular';
 import { AudioService } from 'src/providers/audio.service';
+import { Song } from '../../../interfaces/song';
 
 @Component({
   selector: 'app-mediaplayer',
@@ -70,13 +71,13 @@ export class MediaplayerComponent implements OnInit {
     console.log('stop');
   }
 
-  play(index: number, songs: Song[]) {
-    if (songs === null || index === null) {
+  play(id: number, songs: Song[]) {
+    if (songs === null || id === null) {
       this.audioService.unpause();
     } else {
-      this.currentlyPlayedSong = songs[index];
+      this.currentlyPlayedSong = this.getSongById(id);
       this.audioService.stopPlayback();
-      this.audioService.startPlayback(index, songs[index].mediaPath, this.songs);
+      this.audioService.startPlayback(id, this.songs);
       this.max = this.currentlyPlayedSong.duration;
       this.progress = 0;
     }
@@ -85,6 +86,10 @@ export class MediaplayerComponent implements OnInit {
     this.backgroundMode.enable();
     this.backgroundMode.disableWebViewOptimizations();
     this.getProgress();
+  }
+
+  getSongById(id: number) {
+    return this.songs.find(song => song.id === id);
   }
 
   async getProgress() {

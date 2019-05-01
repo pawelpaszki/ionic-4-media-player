@@ -1,7 +1,7 @@
 import { Component, AfterContentInit } from '@angular/core';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
-import { PersistenceService, Song } from 'src/providers/persistence.service';
+import { PersistenceService } from 'src/providers/persistence.service';
 import * as Data from '../../../AppConstants';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Platform } from '@ionic/angular';
@@ -9,6 +9,7 @@ import { FileService } from 'src/providers/file.service';
 import { AudioService } from 'src/providers/audio.service';
 import { UtilService } from 'src/providers/util.service';
 import { Events } from '@ionic/angular';
+import { Song } from '../../../interfaces/song';
 
 @Component({
   selector: 'app-list',
@@ -28,6 +29,7 @@ export class ListComponent implements AfterContentInit {
   public sortModes: string[] = Object.values(this.constants.SORT_MODES);
   public sortBy: string = this.sortModes[0];
   public displayMode: string = this.constants.DISPLAY_MODES.DETAIL; // TODO get from persistence service later
+  private nextId: number;
 
   constructor(public fileChooser: FileChooser, public persistenceService: PersistenceService,
               public keyboard: Keyboard, public platform: Platform, public fileService: FileService, public audioService: AudioService,
@@ -42,6 +44,9 @@ export class ListComponent implements AfterContentInit {
           if (this.sortBy !== this.sortModes[0]) {
             this.sortSongs();
           }
+          this.persistenceService.getNextId().then(id => {
+            this.nextId = id !== undefined && id !== null ? id : 0;
+          });
         });
       });
     }, 100);
@@ -165,6 +170,7 @@ export class ListComponent implements AfterContentInit {
       let duration = await this.audioService.getDuration(mediaPath);
       this.songs.push(
         {
+          id: this.nextId,
           name: fileName,
           mediaPath: mediaPath,
           duration: duration,
@@ -172,18 +178,21 @@ export class ListComponent implements AfterContentInit {
           favourite: false,
           imageURL: null,
           isMarkedForDeletion: false,
+          isSelectedForPlayback: false,
           size: this.util.convertToDisplaySize(fileSize)
         }
       );
+      this.nextId = this.nextId + 1;
       await this.persistenceService.saveSongs(this.songs);
+      await this.persistenceService.setNextId(this.nextId);
     } catch (error) {
       console.log(error.toString());
     }
   }
 
-  play(index: number) {
-    console.log('play: ' + index);
-    this.events.publish('playback:init', this.songs, index);
+  play(id: number) {
+    console.log('play: ' + id);
+    this.events.publish('playback:init', this.songs, id);
   }
 
   async toggleFavourite(index: number) { // think about efficiency of saving on each favourite click !

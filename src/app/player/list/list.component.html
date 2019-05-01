@@ -2,7 +2,7 @@
 
 
   <div *ngIf="displayMode === constants.DISPLAY_MODES.DETAIL && !editMode">
-    <ion-card *ngFor="let song of songs; let i = index" (click)="play(i)"
+    <ion-card *ngFor="let song of songs; let i = index" (click)="play(song.id)"
       [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none' }">
       <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
         <div style="flex: 2;" id="img">
@@ -37,7 +37,7 @@
   </div>
 
   <div *ngIf="displayMode === constants.DISPLAY_MODES.LIST && !editMode">
-    <ion-card *ngFor="let song of songs; let i = index" (click)="play(i)"
+    <ion-card *ngFor="let song of songs; let i = index" (click)="play(song.id)"
       [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none' }">
       <div style="display: flex; flex-direction: column; width: 100%; height: auto;">
         <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
