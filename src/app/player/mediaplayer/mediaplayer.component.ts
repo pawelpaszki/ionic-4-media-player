@@ -34,7 +34,6 @@ export class MediaplayerComponent implements OnInit {
 
     events.subscribe('playback:init', (songs, index) => {
       // user and time are the same arguments passed in `events.publish(songs, index)`
-      this.songs = songs;
       this.play(index, songs);
     });
     platform.pause.subscribe((result)=>{
@@ -75,8 +74,9 @@ export class MediaplayerComponent implements OnInit {
     if (songs === null || id === null) {
       this.audioService.unpause();
     } else {
+      this.songs = songs;
       this.currentlyPlayedSong = this.getSongById(id);
-      this.audioService.stopPlayback();
+      this.audioService.stopPlayback(true);
       this.audioService.startPlayback(id, this.songs);
       this.max = this.currentlyPlayedSong.duration;
       this.progress = 0;
@@ -113,12 +113,12 @@ export class MediaplayerComponent implements OnInit {
   }
 
   previous() {
-    this.audioService.stopPlayback();
+    this.audioService.stopPlayback(true);
     this.audioService.playPrevious();
   }
 
   next() {
-    this.audioService.stopPlayback();
+    this.audioService.stopPlayback(true);
     this.audioService.playNext();
   }
 

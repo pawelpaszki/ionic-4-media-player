@@ -74,9 +74,11 @@ export class AudioService {
     this.mediaObj.play();
     this.mediaObj.setVolume(1);
     this.mediaObj.onStatusUpdate.subscribe(status => {
+      console.log('status update: ' + status);
+      console.log('ignoreStopSubscriber: ' + this.ignoreStopSubscriber);
       if (status === 4) {
         if (!this.ignoreStopSubscriber) {
-          this.stopPlayback();
+          this.stopPlayback(true);
           this.playNext();
         } else {
           this.ignoreStopSubscriber = false;
@@ -94,7 +96,7 @@ export class AudioService {
   private getSongIndex(id: number) {
     for (let i = 0; i < this.songs.length; i++) {
       if (this.songs[i].id === id) {
-        return this.songs[i].id;
+        return i;
       }
     }
     return 0;
@@ -104,8 +106,8 @@ export class AudioService {
     this.mediaObj.pause();
   }
 
-  stopPlayback() {
-    this.ignoreStopSubscriber = true;
+  stopPlayback(ignoreStopSubscriber: boolean) {
+    this.ignoreStopSubscriber = ignoreStopSubscriber;
     console.log('in stop: ignoreStopSubscriber');
     if (this.mediaObj !== undefined) {
       this.mediaObj.stop();
