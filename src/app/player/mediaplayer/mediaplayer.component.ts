@@ -8,6 +8,7 @@ import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { Events } from '@ionic/angular';
 import { AudioService } from 'src/providers/audio.service';
 import { Song } from '../../../interfaces/song';
+import { timingSafeEqual } from 'crypto';
 
 @Component({
   selector: 'app-mediaplayer',
@@ -108,9 +109,11 @@ export class MediaplayerComponent implements OnInit {
   }
 
   previous() {
-    this.audioService.stopPlayback();
-    this.audioService.playPrevious();
-    this.enableBackgroundMode();
+    if (this.currentlyPlayedSong !== null && this.currentlyPlayedSong !== undefined) {
+      this.audioService.stopPlayback();
+      this.audioService.playPrevious();
+      this.enableBackgroundMode();
+    }
   }
 
   enableBackgroundMode() {
@@ -121,9 +124,11 @@ export class MediaplayerComponent implements OnInit {
   }
 
   next() {
-    this.audioService.stopPlayback();
-    this.audioService.playNext();
-    this.enableBackgroundMode();
+    if (this.currentlyPlayedSong !== null && this.currentlyPlayedSong !== undefined) {
+      this.audioService.stopPlayback();
+      this.audioService.playNext();
+      this.enableBackgroundMode();
+    }
   }
 
   async updateProgress(event) {
@@ -137,6 +142,7 @@ export class MediaplayerComponent implements OnInit {
 
   async toggleShuffle() {
     this.shuffle = !this.shuffle;
+    this.updatePropertiesInAudioService();
     await this.persistenceService.persistShuffleMode(this.shuffle);
   }
 
@@ -148,13 +154,16 @@ export class MediaplayerComponent implements OnInit {
       } else {
         this.repeatMode = this.repeatModes[currentRepeatIndex + 1];
       }
+      this.updatePropertiesInAudioService();
       this.persistenceService.persistRepeatMode(this.repeatMode);
     }
   }
 
   updatePropertiesInAudioService() {
-    const ids = this.util.getSongsIds(this.songs, this.currentlyPlayedSong.id, this.shuffle, this.repeatMode);
-    this.audioService.updatePlaybackControlProperties(this.songs, ids, this.repeatMode === this.constants.REPEAT_MODES.NONE);
+    if (this.audioService.getCurrentlyPlayedSong() !== null) {
+      const ids = this.util.getSongsIds(this.songs, this.currentlyPlayedSong.id, this.shuffle, this.repeatMode);
+      this.audioService.updatePlaybackControlProperties(this.songs, ids, this.repeatMode === this.constants.REPEAT_MODES.NONE);
+    }
   }
 
   setAlbumIconAreaHeight() {
