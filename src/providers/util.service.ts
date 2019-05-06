@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Song } from 'src/interfaces/song';
 
 @Injectable()
 export class UtilService {
@@ -37,5 +38,32 @@ export class UtilService {
       e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
       f = Math.floor(Math.log(size) / Math.log(c));
     return parseFloat((size / Math.pow(c, f)).toFixed(d)) + " " + e[f];
+  }
+
+  public getSongsIds(songs: Song[], id: number, shuffleOn: boolean): number[] {
+    let ids = songs.map((song) => {
+      return song.id;
+    });
+    console.log();
+    if (shuffleOn) {
+      ids = this.shuffleIds(ids);
+    }
+    return ids;
+  }
+
+  private shuffleIds(ids: number[]): number[] {
+    let counter = ids.length;
+    while (counter > 0) {
+        let index = Math.floor(Math.random() * counter);
+        counter--;
+        let temp = ids[counter];
+        ids[counter] = ids[index];
+        ids[index] = temp;
+    }
+    return ids;
+  }
+
+  public getSongById(songs: Song[], id: number): Song {
+    return songs.find(song => song.id === id);
   }
 }

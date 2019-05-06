@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { Song } from '../interfaces/song';
+import { UtilService } from './util.service';
 
 @Injectable()
 export class AudioService { 
 
   mediaObj: MediaObject;
   private songs: Song[];
+  private songIds: number[];
   private currentSongIndex: number;
   private ignoreStopSubscriber: boolean = false;
-  constructor(public media: Media) {
+  private currentlyPlayedId: number;
+  constructor(public media: Media, public util: UtilService) {
 
   }
 
@@ -50,27 +53,23 @@ export class AudioService {
   }
 
   playNext() {
-    if (this.currentSongIndex > this.songs.length - 2) {
-      this.currentSongIndex = 0;
-    } else {
-      this.currentSongIndex = this.currentSongIndex + 1;
-    }
-    this.startPlayback( this.songs[this.currentSongIndex].id, this.songs);
+    this.currentSongIndex = ++this.currentSongIndex % this.songs.length;
+    this.startPlayback(this.songIds[this.currentSongIndex], this.songs, this.songIds);
   }
 
   playPrevious() {
-    if (this.currentSongIndex === 0 || this.currentSongIndex > this.songs.length - 2) {
-      this.currentSongIndex = this.songs.length - 1;
-    } else {
-      this.currentSongIndex = this.currentSongIndex - 1;
-    }
-    this.startPlayback( this.songs[this.currentSongIndex].id, this.songs);
+    this.currentSongIndex = (--this.currentSongIndex + this.songs.length) % this.songs.length
+    this.startPlayback(this.songIds[this.currentSongIndex], this.songs, this.songIds);
   }
 
-  startPlayback(id: number, songs: Song[]) {
+  startPlayback(id: number, songs: Song[], ids: number[]) {
+    this.currentlyPlayedId = id;
     this.songs = songs;
-    this.currentSongIndex = this.getSongIndex(id);
-    this.mediaObj = this.media.create(this.songs[this.currentSongIndex].mediaPath);
+    this.songIds = ids;
+    this.currentSongIndex = this.getSongIdIndex(id);
+    console.log('ids: ' + ids);
+    console.log('id index: ' + this.currentSongIndex);
+    this.mediaObj = this.media.create(this.getCurrentlyPlayedSong().mediaPath);
     this.mediaObj.play();
     this.mediaObj.setVolume(1);
     this.mediaObj.onStatusUpdate.subscribe(status => {
@@ -93,7 +92,11 @@ export class AudioService {
     }
   }
 
-  private getSongIndex(id: number) {
+  private getSongIdIndex(id: number): number {
+    return this.songIds.indexOf(id);
+  }
+
+  private getSongIndex(id: number): number {
     for (let i = 0; i < this.songs.length; i++) {
       if (this.songs[i].id === id) {
         return i;
@@ -116,7 +119,7 @@ export class AudioService {
   }
 
   getCurrentlyPlayedSong() {
-    return this.songs[this.currentSongIndex];
+    return this.util.getSongById(this.songs, this.currentlyPlayedId);
   }
   
 }

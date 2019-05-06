@@ -75,9 +75,10 @@ export class MediaplayerComponent implements OnInit {
       this.audioService.unpause();
     } else {
       this.songs = songs;
-      this.currentlyPlayedSong = this.getSongById(id);
+      const ids = this.util.getSongsIds(songs, id, this.shuffle);
+      this.currentlyPlayedSong = this.util.getSongById(songs, id);
       this.audioService.stopPlayback(true);
-      this.audioService.startPlayback(id, this.songs);
+      this.audioService.startPlayback(id, this.songs, ids);
       this.max = this.currentlyPlayedSong.duration;
       this.progress = 0;
     }
@@ -86,10 +87,6 @@ export class MediaplayerComponent implements OnInit {
     this.backgroundMode.enable();
     this.backgroundMode.disableWebViewOptimizations();
     this.getProgress();
-  }
-
-  getSongById(id: number) {
-    return this.songs.find(song => song.id === id);
   }
 
   async getProgress() {
