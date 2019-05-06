@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { Song } from '../interfaces/song';
 import { UtilService } from './util.service';
+import { Subscription } from 'rxjs';
 
 @Injectable()
 export class AudioService { 
@@ -10,8 +11,11 @@ export class AudioService {
   private songs: Song[];
   private songIds: number[];
   private currentSongIndex: number;
-  private ignoreStopSubscriber: boolean = false;
   private currentlyPlayedId: number;
+  private noRepeat: boolean = false;
+  private ignoreStopSubscriber: boolean = false;
+
+  private onStatusUpdateSubscriber: Subscription ;
   constructor(public media: Media, public util: UtilService) {
 
   }
@@ -53,37 +57,48 @@ export class AudioService {
   }
 
   playNext() {
-    this.currentSongIndex = ++this.currentSongIndex % this.songs.length;
+    this.currentSongIndex = ++this.currentSongIndex % this.songIds.length;
     this.startPlayback(this.songIds[this.currentSongIndex], this.songs, this.songIds);
   }
 
   playPrevious() {
-    this.currentSongIndex = (--this.currentSongIndex + this.songs.length) % this.songs.length
+    this.currentSongIndex = (--this.currentSongIndex + this.songIds.length) % this.songIds.length
     this.startPlayback(this.songIds[this.currentSongIndex], this.songs, this.songIds);
   }
 
-  startPlayback(id: number, songs: Song[], ids: number[]) {
+  startPlayback(id: number, songs: Song[], ids: number[], noRepeat?: boolean) {
+    if (noRepeat !== undefined) {
+      this.noRepeat = noRepeat;
+    }
     this.currentlyPlayedId = id;
     this.songs = songs;
     this.songIds = ids;
-    this.currentSongIndex = this.getSongIdIndex(id);
+    this.currentSongIndex = this.getSongIdIndex(this.currentlyPlayedId);
     console.log('ids: ' + ids);
-    console.log('id index: ' + this.currentSongIndex);
+    console.log('currentSongIndex: ' + this.currentSongIndex);
+    console.log('noRepeat: ' + this.noRepeat);
+    console.log('currentlyPlayedId: ' + this.currentlyPlayedId);
     this.mediaObj = this.media.create(this.getCurrentlyPlayedSong().mediaPath);
+    this.mediaObj.seekTo(0);
     this.mediaObj.play();
     this.mediaObj.setVolume(1);
+    this.onStatusUpdateSubscriber = 
     this.mediaObj.onStatusUpdate.subscribe(status => {
-      console.log('status update: ' + status);
-      console.log('ignoreStopSubscriber: ' + this.ignoreStopSubscriber);
       if (status === 4) {
-        if (!this.ignoreStopSubscriber) {
-          this.stopPlayback(true);
+        this.onStatusUpdateSubscriber.unsubscribe();
+        if (!this.noRepeat || this.currentSongIndex < this.songIds.length - 1) {
+          this.stopPlayback();
           this.playNext();
-        } else {
-          this.ignoreStopSubscriber = false;
-        }
+        } 
       }
     });
+  }
+
+  updatePlaybackControlProperties(songs: Song[], ids: number[], noRepeat: boolean) {
+    this.songs = songs;
+    this.songIds = ids;
+    this.noRepeat = noRepeat;
+    this.currentSongIndex = this.getSongIdIndex(this.currentlyPlayedId) > -1 ? this.getSongIdIndex(this.currentlyPlayedId) : 0;
   }
 
   seekTo(value: number) {
@@ -109,17 +124,20 @@ export class AudioService {
     this.mediaObj.pause();
   }
 
-  stopPlayback(ignoreStopSubscriber: boolean) {
-    this.ignoreStopSubscriber = ignoreStopSubscriber;
-    console.log('in stop: ignoreStopSubscriber');
+  stopPlayback() {
+    this.onStatusUpdateSubscriber.unsubscribe();
     if (this.mediaObj !== undefined) {
       this.mediaObj.stop();
       this.mediaObj.release();
     }
   }
 
-  getCurrentlyPlayedSong() {
-    return this.util.getSongById(this.songs, this.currentlyPlayedId);
+  getCurrentlyPlayedSong(): Song {
+    if (this.songs !== undefined && this.songs.length > 0 && this.currentlyPlayedId !== undefined) {
+      return this.util.getSongById(this.songs, this.currentlyPlayedId);
+    } else {
+      return null;
+    }
   }
   
 }

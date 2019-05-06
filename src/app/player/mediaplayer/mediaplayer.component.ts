@@ -75,18 +75,16 @@ export class MediaplayerComponent implements OnInit {
       this.audioService.unpause();
     } else {
       this.songs = songs;
-      const ids = this.util.getSongsIds(songs, id, this.shuffle);
+      const ids = this.util.getSongsIds(songs, id, this.shuffle, this.repeatMode);
       this.currentlyPlayedSong = this.util.getSongById(songs, id);
-      this.audioService.stopPlayback(true);
-      this.audioService.startPlayback(id, this.songs, ids);
+      if (this.audioService.getCurrentlyPlayedSong() !== null) {
+        this.audioService.stopPlayback();
+      }
+      this.audioService.startPlayback(id, this.songs, ids, this.repeatMode === this.constants.REPEAT_MODES.NONE);
       this.max = this.currentlyPlayedSong.duration;
       this.progress = 0;
+      this.enableBackgroundMode();
     }
-    this.isPlaying = true;
-    console.log('play');
-    this.backgroundMode.enable();
-    this.backgroundMode.disableWebViewOptimizations();
-    this.getProgress();
   }
 
   async getProgress() {
@@ -110,13 +108,22 @@ export class MediaplayerComponent implements OnInit {
   }
 
   previous() {
-    this.audioService.stopPlayback(true);
+    this.audioService.stopPlayback();
     this.audioService.playPrevious();
+    this.enableBackgroundMode();
+  }
+
+  enableBackgroundMode() {
+    this.isPlaying = true;
+    this.backgroundMode.enable();
+    this.backgroundMode.disableWebViewOptimizations();
+    this.getProgress();
   }
 
   next() {
-    this.audioService.stopPlayback(true);
+    this.audioService.stopPlayback();
     this.audioService.playNext();
+    this.enableBackgroundMode();
   }
 
   async updateProgress(event) {
@@ -143,6 +150,11 @@ export class MediaplayerComponent implements OnInit {
       }
       this.persistenceService.persistRepeatMode(this.repeatMode);
     }
+  }
+
+  updatePropertiesInAudioService() {
+    const ids = this.util.getSongsIds(this.songs, this.currentlyPlayedSong.id, this.shuffle, this.repeatMode);
+    this.audioService.updatePlaybackControlProperties(this.songs, ids, this.repeatMode === this.constants.REPEAT_MODES.NONE);
   }
 
   setAlbumIconAreaHeight() {

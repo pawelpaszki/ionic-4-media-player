@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Song } from 'src/interfaces/song';
+import * as Data from '../AppConstants';
 
 @Injectable()
 export class UtilService {
+  public repeatModes = Data.REPEAT_MODES;
 
   public durationToDisplayTime(duration: number): string {
     if (this.isNormalInteger(duration.toString())) {
@@ -40,25 +42,59 @@ export class UtilService {
     return parseFloat((size / Math.pow(c, f)).toFixed(d)) + " " + e[f];
   }
 
-  public getSongsIds(songs: Song[], id: number, shuffleOn: boolean): number[] {
+  public getSongsIds(songs: Song[], id: number, shuffleOn: boolean, repeatMode: string): number[] {
     let ids = songs.map((song) => {
       return song.id;
     });
-    console.log();
+    switch(repeatMode) {
+      case this.repeatModes.ALL: 
+        // do nothing
+        break;
+      case this.repeatModes.PART_OF_SONG: 
+        // ignore for now
+        break;
+      case this.repeatModes.SONG: 
+        ids = [id];
+        break;
+      case this.repeatModes.FAVOURITE: 
+        let favouriteIds = this.getFavouriteSongsIds(songs);
+        if (favouriteIds.length === 0 && ids.length > 0) {
+          // toast here, e.g. no favourite, ids used
+        } else {
+          ids = favouriteIds;
+        }
+        break;
+      case this.repeatModes.SELECTED: 
+        let selectedIds = this.getSelectedIds(songs);
+        if (selectedIds.length === 0 && ids.length > 0) {
+          // toast here, e.g. no selected, ids used
+        } else {
+          ids = selectedIds;
+        }
+        break;
+    }
     if (shuffleOn) {
       ids = this.shuffleIds(ids);
     }
     return ids;
   }
 
+  private getSelectedIds(songs: Song[]) {
+    return songs.filter(song => song.isSelectedForPlayback).map((song) => {return song.id});
+  }
+
+  private getFavouriteSongsIds(songs: Song[]) {
+    return songs.filter(song => song.favourite).map((song) => {return song.id});
+  }
+
   private shuffleIds(ids: number[]): number[] {
     let counter = ids.length;
     while (counter > 0) {
-        let index = Math.floor(Math.random() * counter);
-        counter--;
-        let temp = ids[counter];
-        ids[counter] = ids[index];
-        ids[index] = temp;
+      let index = Math.floor(Math.random() * counter);
+      counter--;
+      let temp = ids[counter];
+      ids[counter] = ids[index];
+      ids[index] = temp;
     }
     return ids;
   }
