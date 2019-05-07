@@ -3,6 +3,7 @@ import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { Song } from '../interfaces/song';
 import { UtilService } from './util.service';
 import { Subscription } from 'rxjs';
+import { Events } from '@ionic/angular';
 
 @Injectable()
 export class AudioService { 
@@ -16,7 +17,7 @@ export class AudioService {
   private ignoreStopSubscriber: boolean = false;
 
   private onStatusUpdateSubscriber: Subscription ;
-  constructor(public media: Media, public util: UtilService) {
+  constructor(public media: Media, public util: UtilService, public events: Events) {
 
   }
 
@@ -89,7 +90,9 @@ export class AudioService {
         if (!this.noRepeat || this.currentSongIndex < this.songIds.length - 1) {
           this.stopPlayback();
           this.playNext();
-        } 
+        } else {
+          this.events.publish('playback:complete');
+        }
       }
     });
   }

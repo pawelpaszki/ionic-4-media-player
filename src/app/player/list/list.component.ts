@@ -1,6 +1,5 @@
 import { Component, AfterContentInit } from '@angular/core';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
-import { Media, MediaObject } from '@ionic-native/media/ngx';
 import { PersistenceService } from 'src/providers/persistence.service';
 import * as Data from '../../../AppConstants';
 import { Keyboard } from '@ionic-native/keyboard/ngx';

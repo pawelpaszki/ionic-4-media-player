@@ -8,7 +8,6 @@ import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { Events } from '@ionic/angular';
 import { AudioService } from 'src/providers/audio.service';
 import { Song } from '../../../interfaces/song';
-import { timingSafeEqual } from 'crypto';
 
 @Component({
   selector: 'app-mediaplayer',
@@ -34,18 +33,23 @@ export class MediaplayerComponent implements OnInit {
               public events: Events, public audioService: AudioService) { 
 
     events.subscribe('playback:init', (songs, index) => {
-      // user and time are the same arguments passed in `events.publish(songs, index)`
+      // songs and index are the same arguments passed in `events.publish(songs, index)`
       this.play(index, songs);
     });
+    events.subscribe('playback:complete', () => {
+      this.playbackCompletedCleanup();
+    })
     platform.pause.subscribe((result)=>{
       this.canSeek = false;
       console.log('canSeek: ' + this.canSeek);
     });
     platform.resume.subscribe((result)=>{
+      if (this.audioService.getCurrentlyPlayedSong() === null) {
+        this.playbackCompletedCleanup();
+      }
       this.canSeek = true;
       console.log('canSeek: ' + this.canSeek);
     });
-
   }
 
   ionViewWillLeave() {
@@ -65,6 +69,13 @@ export class MediaplayerComponent implements OnInit {
     setTimeout(() => {
       this.setAlbumIconAreaHeight();
     }, 100);
+  }
+
+  playbackCompletedCleanup() {
+    this.currentlyPlayedSong = null;
+    this.progress = 0;
+    this.max = 0;
+    this.isPlaying = false;
   }
 
   stop() {
