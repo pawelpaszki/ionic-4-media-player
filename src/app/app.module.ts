@@ -21,6 +21,7 @@ import { AudioService } from 'src/providers/audio.service';
 import { UtilService } from 'src/providers/util.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx'
+import { ToastService } from 'src/providers/toast.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,6 +46,7 @@ import { BackgroundMode } from '@ionic-native/background-mode/ngx'
     UtilService,
     ScreenOrientation,
     BackgroundMode,
+    ToastService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Song } from 'src/interfaces/song';
 import * as Data from '../AppConstants';
+import { ToastService } from './toast.service';
 
 @Injectable()
 export class UtilService {
-  public repeatModes = Data.REPEAT_MODES;
+
+  constructor(private toast: ToastService) {}
+
+  private repeatModes = Data.REPEAT_MODES;
 
   public durationToDisplayTime(duration: number): string {
     if (this.isNormalInteger(duration.toString())) {
@@ -59,7 +63,7 @@ export class UtilService {
       case this.repeatModes.FAVOURITE: 
         let favouriteIds = this.getFavouriteSongsIds(songs);
         if (favouriteIds.length === 0 && ids.length > 0) {
-          // toast here, e.g. no favourite, ids used
+          this.toast.showToast('No favourite songs. All songs will be played');
         } else {
           ids = favouriteIds;
         }
@@ -67,7 +71,7 @@ export class UtilService {
       case this.repeatModes.SELECTED: 
         let selectedIds = this.getSelectedIds(songs);
         if (selectedIds.length === 0 && ids.length > 0) {
-          // toast here, e.g. no selected, ids used
+          this.toast.showToast('No songs selected for playback. All songs will be played');
         } else {
           ids = selectedIds;
         }
