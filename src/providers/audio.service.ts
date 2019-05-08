@@ -14,7 +14,6 @@ export class AudioService {
   private currentSongIndex: number;
   private currentlyPlayedId: number;
   private noRepeat: boolean = false;
-  private ignoreStopSubscriber: boolean = false;
 
   private onStatusUpdateSubscriber: Subscription ;
   constructor(public media: Media, public util: UtilService, public events: Events) {
@@ -98,7 +97,10 @@ export class AudioService {
     this.songs = songs;
     this.songIds = ids;
     this.noRepeat = noRepeat;
-    this.currentSongIndex = this.getSongIdIndex(this.currentlyPlayedId) > -1 ? this.getSongIdIndex(this.currentlyPlayedId) : 0;
+    this.currentSongIndex = this.getSongIdIndex(this.currentlyPlayedId);
+    console.log('ids: ' + ids);
+    console.log('currentSongIndex: ' + this.currentSongIndex);
+    console.log('noRepeat: ' + this.noRepeat);
   }
 
   seekTo(value: number) {

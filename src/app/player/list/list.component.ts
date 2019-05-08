@@ -72,8 +72,8 @@ export class ListComponent implements AfterContentInit {
     if (!this.editMode) {
       this.reorderingEnabled = false;
       this.deletionEnabled = false;
-      await this.persistenceService.saveSongs(this.songs);
       this.updateSongs();
+      await this.persistenceService.saveSongs(this.songs);
     }
   }
 
@@ -146,6 +146,7 @@ export class ListComponent implements AfterContentInit {
         break;
       }
     }
+    this.updateSongs();
   }
 
   toggleSearch() {
@@ -201,7 +202,8 @@ export class ListComponent implements AfterContentInit {
   }
 
   async toggleFavourite(index: number) { // think about efficiency of saving on each favourite click !
-    this.songs[index].favourite = !this.songs[index].favourite
+    this.songs[index].favourite = !this.songs[index].favourite;
+    this.updateSongs();
     await this.persistenceService.saveSongs(this.songs);
   }
 }
