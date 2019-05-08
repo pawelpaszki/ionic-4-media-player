@@ -36,13 +36,20 @@ export class MediaplayerComponent implements OnInit {
       // songs and index are the same arguments passed in `events.publish(songs, index)`
       this.play(index, songs);
     });
+
+    events.subscribe('update:songs', (songs) => {
+      this.updateSongs(songs);
+    });
+
     events.subscribe('playback:complete', () => {
       this.playbackCompletedCleanup();
-    })
+    });
+
     platform.pause.subscribe((result)=>{
       this.canSeek = false;
       console.log('canSeek: ' + this.canSeek);
     });
+    
     platform.resume.subscribe((result)=>{
       if (this.audioService.getCurrentlyPlayedSong() === null) {
         this.playbackCompletedCleanup();
@@ -69,6 +76,11 @@ export class MediaplayerComponent implements OnInit {
     setTimeout(() => {
       this.setAlbumIconAreaHeight();
     }, 100);
+  }
+
+  updateSongs(songs: Song[]) {
+    this.songs = songs;
+    this.updatePropertiesInAudioService();
   }
 
   playbackCompletedCleanup() {

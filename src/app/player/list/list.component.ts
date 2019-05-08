@@ -73,6 +73,7 @@ export class ListComponent implements AfterContentInit {
       this.reorderingEnabled = false;
       this.deletionEnabled = false;
       await this.persistenceService.saveSongs(this.songs);
+      this.updateSongs();
     }
   }
 
@@ -184,9 +185,14 @@ export class ListComponent implements AfterContentInit {
       this.nextId = this.nextId + 1;
       await this.persistenceService.saveSongs(this.songs);
       await this.persistenceService.setNextId(this.nextId);
+      this.updateSongs();
     } catch (error) {
       console.log(error.toString());
     }
+  }
+
+  updateSongs() {
+    this.events.publish('update:songs', this.songs);
   }
 
   play(id: number) {

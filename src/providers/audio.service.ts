@@ -23,17 +23,14 @@ export class AudioService {
 
   getDuration(mediaPath: string): Promise<any> {
     const p: Promise<any> = new Promise((resolve, reject) => {
-      if (this.mediaObj) {
-        this.mediaObj.release();
-      }
-      this.mediaObj = this.media.create(mediaPath);
-      this.mediaObj.play();
-      this.mediaObj.setVolume(0);
+      const tempMediaObj = this.media.create(mediaPath);
+      tempMediaObj.play();
+      tempMediaObj.setVolume(0);
       setTimeout(() => {
-        const duration = Math.round(this.mediaObj.getDuration()).toString();
+        const duration = Math.round(tempMediaObj.getDuration()).toString();
         resolve(duration);
-        this.mediaObj.stop();
-        this.mediaObj.release();
+        tempMediaObj.stop();
+        tempMediaObj.release();
       }, 30);
     });
     return p;
@@ -111,7 +108,7 @@ export class AudioService {
   }
 
   private getSongIdIndex(id: number): number {
-    return this.songIds.indexOf(id);
+    return this.songIds.indexOf(id) > -1 ? this.songIds.indexOf(id) : 0;
   }
 
   private getSongIndex(id: number): number {
