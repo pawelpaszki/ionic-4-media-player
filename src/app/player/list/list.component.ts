@@ -18,8 +18,10 @@ import { Song } from '../../../interfaces/song';
 export class ListComponent implements AfterContentInit {
 
   public searchPhrase: string = '';
+  public markForPlaybackSelectionEnabled: boolean = false;
   public searchEnabled: boolean = false;
   public allMarkedForDeletion: boolean = false;
+  public allMarkedForPlayback: boolean = false;
   public editMode: boolean = false;
   public reorderingEnabled: boolean = false;
   public deletionEnabled: boolean = false;
@@ -38,6 +40,7 @@ export class ListComponent implements AfterContentInit {
     setTimeout(() => {
       this.persistenceService.getSongs().then(songs => {
         this.songs = songs;
+        this.allMarkedForPlayback = this.allSongsMarkedForPlayback();
         this.persistenceService.getSortMode().then(sortBy => {
           this.sortBy = sortBy !== undefined && sortBy !== null ? sortBy : this.sortModes[0];
           if (this.sortBy !== this.sortModes[0]) {
@@ -72,13 +75,23 @@ export class ListComponent implements AfterContentInit {
     if (!this.editMode) {
       this.reorderingEnabled = false;
       this.deletionEnabled = false;
+      this.markForPlaybackSelectionEnabled = false;
       this.updateSongs();
       await this.persistenceService.saveSongs(this.songs);
+      console.log(this.songs);
+    }
+  }
+
+  toggleMarkForPlaybackSelection() {
+    if (!this.markForPlaybackSelectionEnabled) {
+      this.markForPlaybackSelectionEnabled = true;
     }
   }
 
   toggleReordering() {
-    this.reorderingEnabled = !this.reorderingEnabled;
+    if (!this.reorderingEnabled) {
+      this.reorderingEnabled = true;
+    }
   }
 
   deleteAction() {
@@ -97,15 +110,74 @@ export class ListComponent implements AfterContentInit {
     }
   }
 
-  toggleMarkedForDeletion() {
+  toggleMarkedAllForPlayback(value: boolean) {
+    this.allMarkedForPlayback = value;
     this.songs.forEach(song => {
-      song.isMarkedForDeletion = this.allMarkedForDeletion;
+      song.isSelectedForPlayback = value;
     });
+  }
+
+  toggleMarkedAllForDeletion(value: boolean) {
+    this.allMarkedForDeletion = value;
+    this.songs.forEach(song => {
+      song.isMarkedForDeletion = value;
+    });
+  }
+
+  toggleMarkedForPlayback(markedForPlayback: boolean) {
+    if (!markedForPlayback) {
+      this.allMarkedForPlayback = false;
+    } else {
+      if (this.allSongsMarkedForPlayback()) {
+        this.allMarkedForPlayback = true;
+      }
+    }
+  }
+
+  allSongsMarkedForPlayback(): boolean {
+    let allMarked = true;
+    for (let i = 0; i < this.songs.length; i++) {
+      if (!this.songs[i].isSelectedForPlayback) {
+        allMarked = false;
+        break;
+      }
+    }
+    if (!allMarked || this.songs.length === 0) {
+      return false
+    } else {
+      return true;
+    }
+  }
+
+  allSongsMarkedForDeletion(): boolean {
+    let allMarked = true;
+    for (let i = 0; i < this.songs.length; i++) {
+      if (!this.songs[i].isMarkedForDeletion) {
+        allMarked = false;
+        break;
+      }
+    }
+    if (!allMarked || this.songs.length === 0) {
+      return false
+    } else {
+      return true;
+    }
+  }
+
+  toggleMarkedForDeletion(markedForDeletion: boolean) {
+    if (!markedForDeletion) {
+      this.allMarkedForDeletion = false;
+    } else {
+      if (this.allSongsMarkedForDeletion()) {
+        this.allMarkedForDeletion = true;
+      }
+    }
   }
 
   clearModes() {
     this.reorderingEnabled = false;
     this.deletionEnabled = false;
+    this.markForPlaybackSelectionEnabled = false;
   }
 
   changeSort() {
