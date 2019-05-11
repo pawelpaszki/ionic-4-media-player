@@ -66,20 +66,16 @@
   </div>
 
   <ion-card *ngIf="editMode && (deletionEnabled || markForPlaybackSelectionEnabled) && songs !== undefined && songs !== null && songs.length > 0" 
-    style="border-radius: 0 !important; background: lightgrey; margin-bottom: 0 !important;">
+    style="border-radius: 0 !important; margin-bottom: 1em !important;">
     <div style="display: flex; flex-direction: row; width: 100%; height: 2.5em;">
-      <div style="flex: 9; line-height: 2.1em; min-height: 2.1em; max-height: 2.1em; font-size: 1.4em; padding-left: 0.3em; font-weight: 800;" *ngIf="deletionEnabled">
-        <ion-button *ngIf="!allSongsMarkedForDeletion()" (click)="toggleMarkedAllForDeletion(true)">select all</ion-button>
-        <ion-button *ngIf="allSongsMarkedForDeletion()" (click)="toggleMarkedAllForDeletion(false)">select none</ion-button>
-      </div>
-      <div style="flex: 9; line-height: 2.1em; min-height: 2.1em; max-height: 2.1em; font-size: 1.4em; padding-left: 0.3em; font-weight: 800;" *ngIf="markForPlaybackSelectionEnabled">
-        <!-- <ion-checkbox slot="start" [checked]="allMarkedForPlayback" (click)="toggleMarkedAllForPlayback()"></ion-checkbox> Select All for Playback -->
-        <ion-button *ngIf="!allSongsMarkedForPlayback()" (click)="toggleMarkedAllForPlayback(true)">select all</ion-button>
-        <ion-button *ngIf="allSongsMarkedForPlayback()" (click)="toggleMarkedAllForPlayback(false)">select none</ion-button>
-      </div>
-      <div style="flex: 1; text-align: center; color: #b5c827;">
-        <ion-reorder *ngIf="reorderingEnabled"></ion-reorder>
-      </div>
+      <ion-card style="flex: 9; line-height: 2.1em; min-height: 2.1em; max-height: 2.1em; font-size: 1em; padding-left: 0.5em; padding-top: 0.5em;" class="playlist-item-card" *ngIf="deletionEnabled">
+        <ion-checkbox style="margin-left: 0.2em;" *ngIf="!allSongsMarkedForDeletion()" slot="start" [checked]=false (click)="toggleMarkedAllForDeletion(true)"></ion-checkbox>
+        <ion-checkbox style="margin-left: 0.2em;" *ngIf="allSongsMarkedForDeletion()" slot="start" [checked]=true (click)="toggleMarkedAllForDeletion(false)"></ion-checkbox> SELECT ALL
+      </ion-card>
+      <ion-card style="flex: 9; line-height: 2.1em; min-height: 2.1em; max-height: 2.1em; font-size: 1em;  padding-left: 0.5em; padding-top: 0.5em;" class="playlist-item-card" *ngIf="markForPlaybackSelectionEnabled">
+        <ion-checkbox style="margin-left: 0.2em;" *ngIf="!allSongsMarkedForPlayback()" slot="start" [checked]=false (click)="toggleMarkedAllForPlayback(true)"></ion-checkbox>
+        <ion-checkbox style="margin-left: 0.2em;" *ngIf="allSongsMarkedForPlayback()" slot="start" [checked]=true (click)="toggleMarkedAllForPlayback(false)"></ion-checkbox> SELECT ALL
+      </ion-card>
     </div>
   </ion-card>
   <ion-list *ngIf="editMode">

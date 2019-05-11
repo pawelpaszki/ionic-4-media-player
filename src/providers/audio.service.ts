@@ -4,6 +4,7 @@ import { Song } from '../interfaces/song';
 import { UtilService } from './util.service';
 import { Subscription } from 'rxjs';
 import { Events } from '@ionic/angular';
+import { MusicControls } from '@ionic-native/music-controls/ngx';
 
 @Injectable()
 export class AudioService { 
@@ -15,8 +16,9 @@ export class AudioService {
   private currentlyPlayedId: number;
   private noRepeat: boolean = false;
 
-  private onStatusUpdateSubscriber: Subscription ;
-  constructor(public media: Media, public util: UtilService, public events: Events) {
+  private onStatusUpdateSubscriber: Subscription;
+
+  constructor(public media: Media, public util: UtilService, public events: Events, public musicControls: MusicControls) {
 
   }
 
@@ -91,6 +93,69 @@ export class AudioService {
         }
       }
     });
+    this.createMusicControls();
+  }
+
+  createMusicControls() {
+    this.musicControls.create({
+      track       : 'Time is Running Out',        // optional, default : ''
+      artist      : 'Coma',                       // optional, default : ''
+      cover       : 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/techno-triangle-album-cover-flyer-template-2f2a9d4851c7de5f4f2362d3352f42fc_screen.jpg?ts=1477673828',      // optional, default : nothing
+      // cover can be a local path (use fullpath 'file:///storage/emulated/...', or only 'my_image.jpg' if my_image.jpg is in the www folder of your app)
+      //           or a remote url ('http://...', 'https://...', 'ftp://...')
+      isPlaying   : true,                         // optional, default : true
+      dismissable : false,                         // optional, default : false
+
+      hasClose  : true,       // show close button, optional, default: false
+    
+      // // Android only, optional
+      // // text displayed in the status bar when the notification (and the ticker) are updated, optional
+      // ticker    : 'Now playing "Time is Running Out"',
+      // // All icons default to their built-in android equivalents
+      // playIcon: 'media_play',
+      // pauseIcon: 'media_pause',
+      // prevIcon: 'media_prev',
+      // nextIcon: 'media_next',
+      // closeIcon: 'media_close',
+      // notificationIcon: 'notification'
+     });
+
+    this.musicControls.subscribe().subscribe((action) => {
+      let message = JSON.parse(action).message;
+      switch(message) {
+                    case 'music-controls-next':
+                        this.stopPlayback();
+                        this.playNext();
+                        break;
+                    case 'music-controls-previous':
+                        this.stopPlayback();
+                        this.playPrevious();
+                        break;
+                    case 'music-controls-pause':
+                        this.musicControls.updateIsPlaying(false);
+                        this.pause();
+                        break;
+                    case 'music-controls-play':
+                        this.musicControls.updateIsPlaying(true);
+                        this.unpause();
+                        break;
+                    case 'music-controls-destroy':
+                       // Do something
+                        break;
+                    case 'music-controls-media-button' :
+                            // Do something
+                        break;
+                    case 'music-controls-headset-unplugged':
+                            // Do something
+                        break;
+                    case 'music-controls-headset-plugged':
+                            // Do something
+                        break;
+                    default:
+                        break;
+        }
+    });
+    this.musicControls.listen();
   }
 
   updatePlaybackControlProperties(songs: Song[], ids: number[], noRepeat: boolean) {

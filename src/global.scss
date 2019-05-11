@@ -18,3 +18,13 @@
   --border-color: #b5c827;
   transform: translateY(20px) !important;
 }
+
+ion-checkbox {
+  border-radius: 4px;
+  border-color: #b5c827 !important;
+  --background-checked: black;
+  --border-color: #b5c827;
+  --border-color-checked: #b5c827;
+  --checkmark-color: #b5c827;
+  --background: black !important;
+}
