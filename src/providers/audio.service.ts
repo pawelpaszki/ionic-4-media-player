@@ -5,6 +5,7 @@ import { UtilService } from './util.service';
 import { Subscription } from 'rxjs';
 import { Events } from '@ionic/angular';
 import { MusicControls } from '@ionic-native/music-controls/ngx';
+import { PersistenceService } from './persistence.service';
 
 @Injectable()
 export class AudioService { 
@@ -20,7 +21,8 @@ export class AudioService {
 
   private isPlaying: boolean = false;
 
-  constructor(public media: Media, public util: UtilService, public events: Events, public musicControls: MusicControls) {
+  constructor(public media: Media, public util: UtilService, public events: Events, public musicControls: MusicControls,
+              public persistenceService: PersistenceService ) {
 
   }
 
@@ -44,6 +46,7 @@ export class AudioService {
       this.mediaObj.play();
       this.isPlaying = true;
       this.musicControls.updateIsPlaying(true);
+      this.sendProgressUpdate();
     } catch (error) {
       // TODO ??
     }
@@ -77,10 +80,6 @@ export class AudioService {
     this.songs = songs;
     this.songIds = ids;
     this.currentSongIndex = this.getSongIdIndex(this.currentlyPlayedId);
-    console.log('ids: ' + ids);
-    console.log('currentSongIndex: ' + this.currentSongIndex);
-    console.log('noRepeat: ' + this.noRepeat);
-    console.log('currentlyPlayedId: ' + this.currentlyPlayedId);
     this.mediaObj = this.media.create(this.getCurrentlyPlayedSong().mediaPath);
     this.mediaObj.seekTo(0);
     this.mediaObj.play();
@@ -100,23 +99,30 @@ export class AudioService {
       }
     });
     this.createMusicControls();
+    this.sendProgressUpdate();
+    this.incrementPlaybacksCount();
+  }
+
+  incrementPlaybacksCount() {
+    for (let song of this.songs) {
+      if (song.id === this.currentlyPlayedId) {
+        song.numberOfPlaybacks = song.numberOfPlaybacks + 1;
+        this.persistenceService.saveSongs(this.songs);
+        this.events.publish('songs:updated');
+      }
+    }
   }
 
   createMusicControls() {
     this.musicControls.create({
-      track       : 'Time is Running Out',        // optional, default : ''
-      artist      : 'Coma',                       // optional, default : ''
+      track       : this.getCurrentlyPlayedSong().name,        // optional, default : ''
       cover       : 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/techno-triangle-album-cover-flyer-template-2f2a9d4851c7de5f4f2362d3352f42fc_screen.jpg?ts=1477673828',      // optional, default : nothing
-      // cover can be a local path (use fullpath 'file:///storage/emulated/...', or only 'my_image.jpg' if my_image.jpg is in the www folder of your app)
-      //           or a remote url ('http://...', 'https://...', 'ftp://...')
       isPlaying   : true,                         // optional, default : true
-      //dismissable : false,                         // optional, default : false
+      dismissable : true,                         // optional, default : false
 
       hasClose  : true,       // show close button, optional, default: false
     
       // // Android only, optional
-      // // text displayed in the status bar when the notification (and the ticker) are updated, optional
-      // ticker    : 'Now playing "Time is Running Out"',
       // // All icons default to their built-in android equivalents
       // playIcon: 'media_play',
       // pauseIcon: 'media_pause',
@@ -171,9 +177,6 @@ export class AudioService {
     this.songIds = ids;
     this.noRepeat = noRepeat;
     this.currentSongIndex = this.getSongIdIndex(this.currentlyPlayedId);
-    console.log('ids: ' + ids);
-    console.log('currentSongIndex: ' + this.currentSongIndex);
-    console.log('noRepeat: ' + this.noRepeat);
   }
 
   seekTo(value: number) {
@@ -212,6 +215,17 @@ export class AudioService {
     if (this.mediaObj !== undefined) {
       this.mediaObj.stop();
       this.mediaObj.release();
+    }
+  }
+
+  async sendProgressUpdate() {
+    if (this.isPlaying) {
+      const tempProgress = await this.getProgress();
+      const progress = tempProgress > 0 ? Math.floor(tempProgress) : 0;
+      this.events.publish('playback:progress', this.getCurrentlyPlayedSong(), progress);
+      setTimeout(() => {
+        this.sendProgressUpdate();
+      }, 500);
     }
   }
 

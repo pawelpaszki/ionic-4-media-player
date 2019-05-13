@@ -37,6 +37,10 @@ export class MediaplayerComponent implements OnInit {
       this.play(index, songs);
     });
 
+    events.subscribe('playback:progress', (song, progress) => {
+      this.updateProgressProperties(song, progress);
+    });
+
     events.subscribe('update:songs', (songs) => {
       this.updateSongs(songs);
     });
@@ -47,34 +51,23 @@ export class MediaplayerComponent implements OnInit {
 
     events.subscribe('playback:paused', () => {
       setTimeout(() => {
-        this.cd.detectChanges();
         this.isPlaybackOn = false;
-      }, 300);
+        this.cd.detectChanges();
+      }, 100);
     });
 
     events.subscribe('playback:resumed', () => {
-      console.log('playback resumed');
       setTimeout(() => {
-        this.cd.detectChanges();
         this.isPlaybackOn = true;
-        this.updateProgressProperties();
-      }, 300);
+        this.cd.detectChanges();
+      }, 100);
     });
-
-    // events.subscribe('playback:pause', () => {
-    //   this.playbackCompletedCleanup();
-    // });
-
-    // events.subscribe('playback:unpause', () => {
-    //   this.playbackCompletedCleanup();
-    // });
 
     platform.pause.subscribe((result)=>{
       this.canSeek = false;
-      console.log('canSeek: ' + this.canSeek);
     });
     
-    platform.resume.subscribe((result)=>{
+    platform.resume.subscribe((result) =>{
       if (!this.isPlaying()) {
         this.isPlaybackOn = false;
         if (this.audioService.getCurrentlyPlayedSong() === null) {
@@ -82,10 +75,11 @@ export class MediaplayerComponent implements OnInit {
         }
       } else {
         this.isPlaybackOn = true;
-        this.updateProgressProperties();
+        if (this.audioService.getCurrentlyPlayedSong() !== null) {
+          this.currentlyPlayedSong = this.audioService.getCurrentlyPlayedSong();
+        }
       }
       this.canSeek = true;
-      console.log('canSeek: ' + this.canSeek);
     });
   }
 
@@ -95,12 +89,10 @@ export class MediaplayerComponent implements OnInit {
 
   ngOnInit() {
     this.persistenceService.getShuffleMode().then(shuffleOn => {
-      console.log('shuffle on: ' + shuffleOn);
       this.shuffle = shuffleOn !== undefined && shuffleOn !== null ? shuffleOn : false;
     });
 
     this.persistenceService.getRepeatMode().then(repeatMode => {
-      console.log('repeatMode: ' + repeatMode);
       this.repeatMode = repeatMode !== undefined && repeatMode !== null ? repeatMode : this.repeatModes[0];
     });
     setTimeout(() => {
@@ -150,21 +142,13 @@ export class MediaplayerComponent implements OnInit {
     }
     this.isPlaybackOn = true;
     this.enableBackgroundMode();
-    this.updateProgressProperties();
   }
 
-  async updateProgressProperties() {
-    const tempProgress = await this.audioService.getProgress();
-    this.progress = tempProgress > 0 ? Math.floor(tempProgress) : 0;
-    this.currentlyPlayedSong = this.audioService.getCurrentlyPlayedSong();
+  async updateProgressProperties(song: Song, progress: number) {
+    this.progress = progress;
+    this.currentlyPlayedSong = song;
     this.max = this.currentlyPlayedSong.duration;
     this.cd.detectChanges();
-    console.log('updateProgressProperties');
-    if (this.isPlaybackOn) {
-      setTimeout(() => {
-        this.updateProgressProperties();
-      }, 500);
-    }
   }
 
   isPlaying() {

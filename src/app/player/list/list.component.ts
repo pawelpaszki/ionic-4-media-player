@@ -1,4 +1,4 @@
-import { Component, AfterContentInit } from '@angular/core';
+import { Component, AfterContentInit, ChangeDetectorRef } from '@angular/core';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { PersistenceService } from 'src/providers/persistence.service';
 import * as Data from '../../../AppConstants';
@@ -34,7 +34,24 @@ export class ListComponent implements AfterContentInit {
 
   constructor(public fileChooser: FileChooser, public persistenceService: PersistenceService,
               public keyboard: Keyboard, public platform: Platform, public fileService: FileService, public audioService: AudioService,
-              public util: UtilService, public events: Events) { }
+              public util: UtilService, public events: Events, private cd: ChangeDetectorRef) { 
+
+    events.subscribe('songs:updated', () => {
+      this.getNewSongList();
+    });
+
+    platform.resume.subscribe((result) =>{
+      this.getNewSongList();
+    });
+  }
+
+  private getNewSongList() {
+    this.persistenceService.getSongs().then(songs => {
+      this.songs = songs;
+      this.allMarkedForPlayback = this.allSongsMarkedForPlayback();
+      this.updateSongs();
+    });
+  }
 
   ngAfterContentInit() {
     setTimeout(() => {
@@ -78,7 +95,6 @@ export class ListComponent implements AfterContentInit {
       this.markForPlaybackSelectionEnabled = false;
       this.updateSongs();
       await this.persistenceService.saveSongs(this.songs);
-      console.log(this.songs);
     }
   }
 
@@ -260,7 +276,7 @@ export class ListComponent implements AfterContentInit {
       await this.persistenceService.setNextId(this.nextId);
       this.updateSongs();
     } catch (error) {
-      console.log(error.toString());
+      
     }
   }
 
@@ -269,7 +285,6 @@ export class ListComponent implements AfterContentInit {
   }
 
   play(id: number) {
-    console.log('play: ' + id);
     this.events.publish('playback:init', this.songs, id);
   }
 
