@@ -18,6 +18,8 @@ export class AudioService {
 
   private onStatusUpdateSubscriber: Subscription;
 
+  private isPlaying: boolean = false;
+
   constructor(public media: Media, public util: UtilService, public events: Events, public musicControls: MusicControls) {
 
   }
@@ -40,6 +42,8 @@ export class AudioService {
   unpause() {
     try {
       this.mediaObj.play();
+      this.isPlaying = true;
+      this.musicControls.updateIsPlaying(true);
     } catch (error) {
       // TODO ??
     }
@@ -81,6 +85,8 @@ export class AudioService {
     this.mediaObj.seekTo(0);
     this.mediaObj.play();
     this.mediaObj.setVolume(1);
+    this.isPlaying = true;
+    this.musicControls.updateIsPlaying(true);
     this.onStatusUpdateSubscriber = 
     this.mediaObj.onStatusUpdate.subscribe(status => {
       if (status === 4) {
@@ -104,7 +110,7 @@ export class AudioService {
       // cover can be a local path (use fullpath 'file:///storage/emulated/...', or only 'my_image.jpg' if my_image.jpg is in the www folder of your app)
       //           or a remote url ('http://...', 'https://...', 'ftp://...')
       isPlaying   : true,                         // optional, default : true
-      dismissable : false,                         // optional, default : false
+      //dismissable : false,                         // optional, default : false
 
       hasClose  : true,       // show close button, optional, default: false
     
@@ -132,12 +138,14 @@ export class AudioService {
                         this.playPrevious();
                         break;
                     case 'music-controls-pause':
-                        this.musicControls.updateIsPlaying(false);
                         this.pause();
+                        this.events.publish('playback:paused');
+                        // this.events.publish('playback:pause');
                         break;
                     case 'music-controls-play':
-                        this.musicControls.updateIsPlaying(true);
                         this.unpause();
+                        this.events.publish('playback:resumed');
+                        // this.events.publish('playback:unpause');
                         break;
                     case 'music-controls-destroy':
                        // Do something
@@ -187,11 +195,19 @@ export class AudioService {
     return 0;
   }
 
+  isMusicPlaying(): boolean {
+    return this.isPlaying;
+  }
+
   pause() {
+    this.isPlaying = false;
     this.mediaObj.pause();
+    this.musicControls.updateIsPlaying(false);
   }
 
   stopPlayback() {
+    this.isPlaying = false;
+    this.musicControls.updateIsPlaying(true);
     this.onStatusUpdateSubscriber.unsubscribe();
     if (this.mediaObj !== undefined) {
       this.mediaObj.stop();

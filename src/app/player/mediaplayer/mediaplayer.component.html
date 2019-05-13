@@ -27,7 +27,7 @@
   </div>
   <div style="position: fixed; bottom: 120px; left: 0; height: 40px; width: 100%; background: white; display: flex; flex-direction: row; align-items: center; text-align: center;"
   [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '50px' : '110px' }">
-    <ion-range [(ngModel)]="progress" [min]=0 [max]=max step="1" (ionChange)="updateProgress($event)">
+    <ion-range [value]=progress [min]=0 [max]=max step="1" (ionChange)="updateProgress($event)">
       <ion-icon size="small" slot="start" name="sunny"></ion-icon>
       <ion-icon slot="end" name="sunny"></ion-icon>
     </ion-range>
@@ -48,10 +48,10 @@
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
       <ion-icon name="skip-backward" (click)="previous()"></ion-icon>
     </div>
-    <div *ngIf="!isPlaying" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+    <div [style.display]="getDisplayType('play')" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
       <ion-icon name="play" (click)="play(null, null)"></ion-icon>
     </div>
-    <div *ngIf="isPlaying" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+    <div [style.display]="getDisplayType('pause')" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
       <ion-icon name="pause" (click)="pause()"></ion-icon>
     </div>
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
