@@ -1,10 +1,45 @@
 <div (window:resize)="setAlbumIconAreaHeight($event)">
-  <div style="position: fixed; top: 60px; left: 0; height: 40px; width: 100%; background: #282828; display: flex; flex-direction: row; align-items: center; text-align: center;">
+  <div style="position: fixed; top: 60px; left: 0; height: 40px; width: 100%; background: black; display: flex; flex-direction: row; align-items: center; text-align: center;">
+    
+    <div style="flex: 5; -ms-flex: 5; -webkit-flex: 5;">
+
+    </div>
+  </div>
+  <div id="albumPhoto">
+    <img id="image" src="../../assets/icon/skull_icon_inv.png">
+  </div>
+  <div style="position: fixed; left: 0; height: 40px; width: 100%; background: black; display: flex; flex-direction: row; align-items: center; text-align: center;"
+  [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '60px' : '120px' }">
+    <ion-range [value]=progress [min]=0 [max]=max step="1" (ionChange)="updateProgress($event)">
+    </ion-range>
+    <div class="duration-container">
+      <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+        {{util.durationToDisplayTime(progress)}}
+      </div>
+      <div style="flex: 3; -ms-flex: 3; -webkit-flex: 3;">
+
+      </div>
+      <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+        {{util.durationToDisplayTime(max)}}
+      </div>
+    </div>
+  </div>
+  <div style="position: fixed; bottom: 60px; left: 0; height: 60px; width: 100%; background: black; display: flex; flex-direction: row; align-items: center; text-align: center;"
+  [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '0' : '60px' }">
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="toggleShuffle()">
       <ion-icon name="shuffle" [ngStyle]="{'color': shuffle ? '#b5c827' : 'white' }"></ion-icon>
     </div>
-    <div style="flex: 5; -ms-flex: 5; -webkit-flex: 5;">
-
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+      <ion-icon class="controlIcon" name="skip-backward" (click)="previous()"></ion-icon>
+    </div>
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+      <div style="height: 58px; width: 58px; margin: auto; border-radius: 50%; border: solid 1px white;">
+        <ion-icon [style.display]="getDisplayType('play')" name="play" (click)="play(null, null)" style="margin-top: 10px; margin-left: 11px; font-size: 40px;"></ion-icon>
+        <ion-icon [style.display]="getDisplayType('pause')" name="pause" (click)="pause()" style="margin-left: 8px; margin-top: 9px; font-size: 40px;"></ion-icon>
+      </div>
+    </div>
+    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
+      <ion-icon class="controlIcon" name="skip-forward" (click)="next()"></ion-icon>
     </div>
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeRepeatMode()">
       <ion-badge *ngIf="repeatMode === constants.REPEAT_MODES.SELECTED" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
@@ -19,46 +54,7 @@
       <ion-badge *ngIf="repeatMode === constants.REPEAT_MODES.PART_OF_SONG" slot="start" style="position: relative; left: -15px; top: 10px; font-size: 12px; background: #0000; color: #b5c827;">
         <ion-icon name="md-time" style="font-size: 12px; position: relative; color: #b5c827; margin-left: -3px;"></ion-icon>
       </ion-badge>
-      <ion-icon [ngStyle]="{'color': repeatMode !== constants.REPEAT_MODES.NONE ? '#b5c827' : 'white' }" name="repeat" style="position: absolute; right: calc(8.5% - 15px); top: 8px;"></ion-icon>
-    </div>
-  </div>
-  <div id="albumPhoto">
-    <img id="image" src="../../assets/icon/skull_icon.png">
-  </div>
-  <div style="position: fixed; bottom: 120px; left: 0; height: 40px; width: 100%; background: white; display: flex; flex-direction: row; align-items: center; text-align: center;"
-  [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '50px' : '110px' }">
-    <ion-range [value]=progress [min]=0 [max]=max step="1" (ionChange)="updateProgress($event)">
-      <ion-icon size="small" slot="start" name="sunny"></ion-icon>
-      <ion-icon slot="end" name="sunny"></ion-icon>
-    </ion-range>
-    <div class="duration-container">
-      <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-        {{util.durationToDisplayTime(progress)}}
-      </div>
-      <div style="flex: 3; -ms-flex: 3; -webkit-flex: 3;">
-
-      </div>
-      <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-        {{util.durationToDisplayTime(max)}}
-      </div>
-    </div>
-  </div>
-  <div style="position: fixed; bottom: 60px; left: 0; height: 50px; width: 100%; background: #282828; display: flex; flex-direction: row; align-items: center; text-align: center;"
-  [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '0' : '60px' }">
-    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-      <ion-icon name="skip-backward" (click)="previous()"></ion-icon>
-    </div>
-    <div [style.display]="getDisplayType('play')" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-      <ion-icon name="play" (click)="play(null, null)"></ion-icon>
-    </div>
-    <div [style.display]="getDisplayType('pause')" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-      <ion-icon name="pause" (click)="pause()"></ion-icon>
-    </div>
-    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-      <ion-icon name="square" (click)="stop()"></ion-icon>
-    </div>
-    <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-      <ion-icon name="skip-forward" (click)="next()"></ion-icon>
+      <ion-icon [ngStyle]="{'color': repeatMode !== constants.REPEAT_MODES.NONE ? '#b5c827' : 'white' }" name="repeat" style="position: absolute; right: calc(8.5% - 6px); top: 16px;"></ion-icon>
     </div>
   </div>
 </div>

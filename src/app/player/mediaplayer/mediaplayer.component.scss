@@ -3,19 +3,23 @@ ion-icon {
   color: white;
 }
 
+.controlIcon {
+  font-size: 20px;
+}
+
 ion-range {
   height: 20px;
+  width: 90%;
   position: absolute;
   top: 0;
-  width: 100%;
-  margin: 0 !important;
+  margin: 0 0 0 5%!important;
   padding: 0 !important;
-  --knob-background: black;
+  --knob-background: #b5c827;
   --bar-height: 8px;
-  --bar-background: darkgrey;
+  --bar-background: white;
   --bar-background-active: #b5c827;
   --bar-border-radius: 6px;
-  --knob-size: 20px;
+  --knob-size: 30px;
 }
 
 .duration-container {
@@ -35,6 +39,7 @@ ion-range {
 #albumPhoto {
   position: absolute;
   width: 100%;
+  background: black;
 }
 
 #image {

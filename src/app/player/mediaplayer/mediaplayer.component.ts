@@ -224,7 +224,7 @@ export class MediaplayerComponent implements OnInit {
     const tabBarHeight = 60;
     const mediaProgressHeight = 60;
     const topFunctionBarHeight = 40;
-    const playControlsHeight = 50;
+    const playControlsHeight = 60;
     const albumAreaHeight = bodyHeight - toolbarHeight - tabBarHeight - mediaProgressHeight - topFunctionBarHeight - playControlsHeight;
 
     let albumPhotoArea = document.getElementById('albumPhoto');

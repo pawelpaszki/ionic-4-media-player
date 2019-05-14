@@ -27,10 +27,16 @@
       <ion-icon name="play"></ion-icon>
       <ion-label>player</ion-label>
     </ion-tab-button>
-
     <ion-tab-button (click)="changeTab('list')" [ngStyle]="{'color': visibleTab === 'list' ? '#b5c827' : 'white' }">
       <ion-icon name="list"></ion-icon>
       <ion-label>list</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="changeTab('search')" [ngStyle]="{'color': visibleTab === 'search' ? '#b5c827' : 'white' }">
+      <ion-badge slot="start">
+        <ion-icon name="search" style="font-size: 12px; position: relative; color: #b5c827; margin-left: -2px;"></ion-icon>
+      </ion-badge>
+      <ion-icon name="search"></ion-icon>
+      <ion-label>yt search</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-footer>
