@@ -23,6 +23,9 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx'
 import { ToastService } from 'src/providers/toast.service';
 import { MusicControls } from '@ionic-native/music-controls/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { HttpClientModule } from '@angular/common/http';
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +34,7 @@ import { MusicControls } from '@ionic-native/music-controls/ngx';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    HttpClientModule,
     IonicStorageModule.forRoot()
   ],
   providers: [
@@ -38,7 +42,9 @@ import { MusicControls } from '@ionic-native/music-controls/ngx';
     SplashScreen,
     Keyboard,
     Media,
-    File,    
+    FileTransfer,
+    File,
+    AndroidPermissions,
     FileChooser,
     FilePath,
     FileService,

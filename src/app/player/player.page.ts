@@ -14,6 +14,7 @@ export class PlayerPage {
   constructor(public events: Events, public util: UtilService, public platform: Platform,
     private audioService: AudioService) {
     events.subscribe('playback:init', (songs, index) => {
+      this.visibleTab = 'player';
       const song = this.util.getSongById(songs, index);
       this.title = song.name;
     });
