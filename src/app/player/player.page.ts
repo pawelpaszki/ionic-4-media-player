@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { Events } from '@ionic/angular';
+import { Events, Platform } from '@ionic/angular';
+import { UtilService } from 'src/providers/util.service';
+import { AudioService } from 'src/providers/audio.service';
 
 @Component({
   selector: 'app-player',
@@ -8,9 +10,25 @@ import { Events } from '@ionic/angular';
 })
 export class PlayerPage {
 
-  constructor(public events: Events) {
+  private title: string = 'Yimp';
+  constructor(public events: Events, public util: UtilService, public platform: Platform,
+    private audioService: AudioService) {
     events.subscribe('playback:init', (songs, index) => {
-      this.visibleTab = 'player'; // change to player??
+      const song = this.util.getSongById(songs, index);
+      this.title = song.name;
+    });
+    events.subscribe('playback:progress', (song, progress) => {
+      this.title = song.name;
+    });
+    events.subscribe('playback:complete', () => {
+      this.title = 'Yimp';
+    });
+    platform.resume.subscribe((result) =>{
+      if (this.audioService.getCurrentlyPlayedSong() === null) {
+        this.title = 'Yimp';
+      } else {
+        this.title = this.audioService.getCurrentlyPlayedSong().name;
+      }
     });
   }
 
