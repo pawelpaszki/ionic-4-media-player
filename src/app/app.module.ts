@@ -26,6 +26,7 @@ import { MusicControls } from '@ionic-native/music-controls/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { YoutubeService } from 'src/providers/youtube.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,6 +52,7 @@ import { FileTransfer } from '@ionic-native/file-transfer/ngx';
     PersistenceService,
     AudioService,
     UtilService,
+    YoutubeService,
     ScreenOrientation,
     BackgroundMode,
     ToastService,

@@ -13,3 +13,20 @@ ion-title {
   font-size: 16px;
   margin-top: 15px;
 }
+
+.searchIcon {
+  width: 8%;
+  position: absolute;
+  display: relative;
+  left: 90%;
+  top: 13px;
+  font-size: 40px;
+  z-index: 999;
+  color: white;
+}
+
+ion-input {
+  background: black;
+  width: 90%;
+  margin-top: 10px;
+}

@@ -11,6 +11,7 @@ import { AudioService } from 'src/providers/audio.service';
 export class PlayerPage {
 
   private title: string = 'Yimp';
+  private searchPhrase: string = '';
   constructor(public events: Events, public util: UtilService, public platform: Platform,
     private audioService: AudioService) {
     events.subscribe('playback:init', (songs, index) => {
@@ -44,5 +45,11 @@ export class PlayerPage {
 
   getDisplayType(value: string) {
     return value === this.visibleTab ? 'block' : 'none';
+  }
+
+  search() {
+    console.log('publish search');
+    this.events.publish('yt:search', this.searchPhrase);
+    this.searchPhrase = '';
   }
 }

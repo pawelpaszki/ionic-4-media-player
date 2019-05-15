@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { PlayerPage } from './player.page';
 import { MediaplayerComponent } from './mediaplayer/mediaplayer.component';
 import { ListComponent } from './list/list.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   imports: [
@@ -23,11 +24,13 @@ import { ListComponent } from './list/list.component';
   declarations: [
     PlayerPage,
     MediaplayerComponent,
-    ListComponent
+    ListComponent,
+    SearchComponent
   ],
   exports:[
     MediaplayerComponent,
-    ListComponent
+    ListComponent,
+    SearchComponent
   ]
 })
 export class PlayerModule {}

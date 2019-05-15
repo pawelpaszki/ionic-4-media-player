@@ -1,6 +1,10 @@
 <ion-header>
-  <ion-toolbar color="dark">
+  <ion-toolbar color="dark" *ngIf="visibleTab !== 'search'">
     <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="dark" *ngIf="visibleTab === 'search'">
+    <ion-input placeholder="Enter search phrase" [(ngModel)]="searchPhrase"></ion-input>
+    <ion-icon name="md-search" class="searchIcon" (click)="search()"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -12,9 +16,13 @@
 
   </app-list>
 
+  <app-search [style.display]="getDisplayType('search')">
+
+  </app-search>
+
 </ion-content>
 
-<ion-footer>
+<ion-footer [ngStyle]="{ 'box-shadow': visibleTab === 'search' ? '1px 0px 5px white' : 'none' }">
   <ion-tab-bar slot="bottom">
     <ion-tab-button (click)="changeTab('player')" [ngStyle]="{'color': visibleTab === 'player' ? '#b5c827' : 'white' }">
       <ion-icon name="play"></ion-icon>
