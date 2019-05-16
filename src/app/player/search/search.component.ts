@@ -9,15 +9,15 @@ import { Events } from '@ionic/angular';
 })
 export class SearchComponent implements OnInit {
 
+  public downloadedMediaIds: string[] = [];
   public searchResults = [];
   constructor(public youtube: YoutubeService, public events: Events) {
     events.subscribe('yt:search', (searchPhrase) => {
-      console.log('yt:search');
       this.search(searchPhrase);
     });
-    // events.subscribe('songs:updated', () => {
-    //   this.getNewSongList();
-    // });
+    events.subscribe('download:finished', (id) => {
+      this.removeDownloadedId(id);
+    });
   }
 
   ngOnInit() {
@@ -33,6 +33,28 @@ export class SearchComponent implements OnInit {
         });
       }
     });
+  }
+
+  downloadMedia(id: string, name: string, largeThumbnail?: string, mediumThumbnail?: string) {
+    if (this.downloadedMediaIds.indexOf(id) === -1) {
+      this.downloadedMediaIds.push(id);
+      this.youtube.extractMedia(id)
+      .subscribe((response: any) => {
+        console.log(response);
+        if (response.data !== undefined && response.data.Key !== undefined) {
+          this.youtube.downloadFile(id, name, largeThumbnail, mediumThumbnail);
+        }
+      });
+    }
+  }
+
+  removeDownloadedId(id) {
+    for( var i = 0; i < this.downloadedMediaIds.length; i++){ 
+      if (this.downloadedMediaIds[i] === id) {
+        this.downloadedMediaIds.splice(i, 1);
+        break;
+      }
+    }
   }
 
 }

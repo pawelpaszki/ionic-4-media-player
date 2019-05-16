@@ -8,5 +8,7 @@ export interface Song {
   duration: number,
   favourite: boolean,
   isMarkedForDeletion: boolean,
-  isSelectedForPlayback: boolean
+  isSelectedForPlayback: boolean,
+  largeThumbnail?: string,
+  mediumThumbnail?: string
 }

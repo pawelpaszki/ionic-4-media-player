@@ -1,11 +1,13 @@
 <div>
-  <ion-card *ngFor="let result of searchResults" (click)="downloadMedia(result.id, result.name)" >
+  <ion-card *ngFor="let result of searchResults" (click)="downloadMedia(result.id, result.name, result.thumbnails.large, result.thumbnails.medium)" 
+  [ngStyle]="{ 'opacity': downloadedMediaIds.indexOf(result.id) !== -1 ? '0.5' : '1' }">
     <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
       <div style="flex: 3;">
         <ion-img [src]="result.thumbnails.medium"></ion-img>
       </div>
       <div style="flex: 7; flex-direction: row; width: 100%; height: auto; padding-left: 0.5em; color: #b5c827;">
         {{result.name}}
+        <img *ngIf="downloadedMediaIds.indexOf(result.id) !== -1" class="download" src="../../assets/icon/download.gif">
       </div>
     </div>
   </ion-card>

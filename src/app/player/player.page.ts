@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Events, Platform } from '@ionic/angular';
 import { UtilService } from 'src/providers/util.service';
 import { AudioService } from 'src/providers/audio.service';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-player',
@@ -13,7 +14,14 @@ export class PlayerPage {
   private title: string = 'Yimp';
   private searchPhrase: string = '';
   constructor(public events: Events, public util: UtilService, public platform: Platform,
-    private audioService: AudioService) {
+    private audioService: AudioService, private androidPermissions: AndroidPermissions) {
+
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
+      result => console.log('Has permission?',result.hasPermission),
+      err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+    );
+    
+    this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.GET_ACCOUNTS]);
     events.subscribe('playback:init', (songs, index) => {
       this.visibleTab = 'player';
       const song = this.util.getSongById(songs, index);

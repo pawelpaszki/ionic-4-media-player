@@ -40,6 +40,10 @@ export class ListComponent implements AfterContentInit {
       this.getNewSongList();
     });
 
+    this.events.subscribe('download:song', (url, name, largeThumbnail, mediumThumbnail) => {
+      this.persistFile(url, name, largeThumbnail, mediumThumbnail);
+    });
+
     platform.resume.subscribe((result) =>{
       this.getNewSongList();
     });
@@ -249,13 +253,19 @@ export class ListComponent implements AfterContentInit {
   }
 
   async addFile() {
+    let songURL = await this.fileService.openFile();
+    this.persistFile(songURL);
+  }
+
+  async persistFile(url: string, name?: string, largeThumbnail?: string, mediumThumbnail?: string) {
     try {
-      let songURI = await this.fileService.openFile();
-      let nativePath = await this.fileService.getNativePath(songURI);
+      let nativePath = await this.fileService.getNativePath(url);
       let fileInfo = await this.fileService.getFileInfo(nativePath);
       let mediaPath = nativePath.replace(/file:\/\//g, '');
-      let fileName = fileInfo.name;
-      let fileSize = await this.fileService.getFileSize(songURI);
+      let fileName = name !== undefined && name.length > 0 ? name : fileInfo.name;
+      const lgThumbnail = largeThumbnail !== undefined ? largeThumbnail : null;
+      const mdThumbnail = mediumThumbnail !== undefined ? mediumThumbnail : null;
+      let fileSize = await this.fileService.getFileSize(url);
       let duration = await this.audioService.getDuration(mediaPath);
       this.songs.push(
         {
@@ -268,7 +278,9 @@ export class ListComponent implements AfterContentInit {
           imageURL: null,
           isMarkedForDeletion: false,
           isSelectedForPlayback: false,
-          size: this.util.convertToDisplaySize(fileSize)
+          size: this.util.convertToDisplaySize(fileSize),
+          largeThumbnail: lgThumbnail,
+          mediumThumbnail: mdThumbnail
         }
       );
       this.nextId = this.nextId + 1;
