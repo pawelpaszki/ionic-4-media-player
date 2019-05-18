@@ -1,12 +1,7 @@
 <div (window:resize)="setAlbumIconAreaHeight($event)">
-  <div style="position: fixed; top: 60px; left: 0; height: 40px; width: 100%; background: black; display: flex; flex-direction: row; align-items: center; text-align: center;">
-    
-    <div style="flex: 5; -ms-flex: 5; -webkit-flex: 5;">
-
-    </div>
-  </div>
   <div id="albumPhoto">
-    <img id="image" src="../../assets/icon/skull_icon_inv.png">
+    <img *ngIf="!coverAvailable" id="image" src="../../assets/icon/skull_icon_inv.png">
+    <img *ngIf="coverAvailable" id="image" src="{{albumCoverAddress}}">
   </div>
   <div style="position: fixed; left: 0; height: 40px; width: 100%; background: black; display: flex; flex-direction: row; align-items: center; text-align: center;"
   [ngStyle]="{ 'bottom': platform.is('android') && !platform.is('desktop') && keyboard.isVisible ? '60px' : '120px' }">

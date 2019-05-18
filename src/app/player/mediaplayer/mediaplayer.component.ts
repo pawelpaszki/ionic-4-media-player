@@ -27,10 +27,14 @@ export class MediaplayerComponent implements OnInit {
   public currentlyPlayedSong: Song;
   public canSeek: boolean = true;
   public isPlaybackOn: boolean = false;
+  public coverAvailable: boolean = false;
+  public albumCoverAddress: string = '';
+  private albumImageTop: string = '0px';
 
   constructor(public keyboard: Keyboard, public platform: Platform, public util: UtilService,
               public persistenceService: PersistenceService, public backgroundMode: BackgroundMode,
               public events: Events, public audioService: AudioService, private cd: ChangeDetectorRef) { 
+                console.log(platform);
 
     events.subscribe('playback:init', (songs, index) => {
       // songs and index are the same arguments passed in `events.publish(songs, index)`
@@ -117,6 +121,8 @@ export class MediaplayerComponent implements OnInit {
 
   playbackCompletedCleanup() {
     this.isPlaybackOn = false;
+    this.coverAvailable = false;
+    this.setAlbumIconAreaHeight();
     this.currentlyPlayedSong = null;
     this.progress = 0;
     this.max = 0;
@@ -127,8 +133,10 @@ export class MediaplayerComponent implements OnInit {
   }
 
   play(id: number, songs: Song[]) {
-    if (songs === null || id === null) {
+    if ((songs === null || id === null) && this.currentlyPlayedSong !== undefined) {
       this.audioService.unpause();
+      this.isPlaybackOn = true;
+      this.enableBackgroundMode();
     } else {
       this.songs = songs;
       const ids = this.util.getSongsIds(songs, id, this.shuffle, this.repeatMode);
@@ -139,15 +147,25 @@ export class MediaplayerComponent implements OnInit {
       this.audioService.startPlayback(id, this.songs, ids, this.repeatMode === this.constants.REPEAT_MODES.NONE);
       this.max = this.currentlyPlayedSong.duration;
       this.progress = 0;
+      this.isPlaybackOn = true;
+      this.enableBackgroundMode();
     }
-    this.isPlaybackOn = true;
-    this.enableBackgroundMode();
   }
 
   async updateProgressProperties(song: Song, progress: number) {
     this.progress = progress;
     this.currentlyPlayedSong = song;
     this.max = this.currentlyPlayedSong.duration;
+    console.log(this.currentlyPlayedSong.largeThumbnail);
+    if (this.currentlyPlayedSong.largeThumbnail !== undefined) {
+      if (this.albumCoverAddress !== this.currentlyPlayedSong.largeThumbnail) {
+        this.albumCoverAddress = this.currentlyPlayedSong.largeThumbnail;
+      }
+      this.coverAvailable = true;
+    } else {
+      this.coverAvailable = false;
+      this.setAlbumIconAreaHeight();
+    }
     this.cd.detectChanges();
   }
 
@@ -165,6 +183,8 @@ export class MediaplayerComponent implements OnInit {
     if (this.currentlyPlayedSong !== null && this.currentlyPlayedSong !== undefined) {
       this.audioService.stopPlayback();
       this.audioService.playPrevious();
+      this.isPlaybackOn = true;
+      this.cd.detectChanges();
       this.enableBackgroundMode();
     }
   }
@@ -178,6 +198,8 @@ export class MediaplayerComponent implements OnInit {
     if (this.currentlyPlayedSong !== null && this.currentlyPlayedSong !== undefined) {
       this.audioService.stopPlayback();
       this.audioService.playNext();
+      this.isPlaybackOn = true;
+      this.cd.detectChanges();
       this.enableBackgroundMode();
     }
   }
@@ -222,26 +244,19 @@ export class MediaplayerComponent implements OnInit {
     const bodyWidth = document.body.scrollWidth;
     const toolbarHeight = 60;
     const tabBarHeight = 60;
-    const mediaProgressHeight = 60;
-    const topFunctionBarHeight = 40;
+    const mediaProgressHeight = 40;
     const playControlsHeight = 60;
-    const albumAreaHeight = bodyHeight - toolbarHeight - tabBarHeight - mediaProgressHeight - topFunctionBarHeight - playControlsHeight;
+    const albumAreaHeight = bodyHeight - toolbarHeight - tabBarHeight - mediaProgressHeight - playControlsHeight;
 
     let albumPhotoArea = document.getElementById('albumPhoto');
     let albumImage = document.getElementById('image');
+    
     albumPhotoArea.style.height = `${albumAreaHeight}px`;
-    albumPhotoArea.style.top = `${topFunctionBarHeight}px`;
-    if (albumAreaHeight > bodyWidth) {
-      albumImage.style.height = `${bodyWidth}px`;
-      albumImage.style.width = `${bodyWidth}px`;
-      let topPosition = (albumAreaHeight - bodyWidth) / 2;
-      albumImage.style.top = `${topPosition}px`;
-    } else if (bodyWidth > albumAreaHeight) {
-      albumImage.style.height = `${albumAreaHeight}px`;
-      albumImage.style.width = `${albumAreaHeight}px`;
-      let leftPosition = (bodyWidth - albumAreaHeight) / 2;
-      albumImage.style.left = `${leftPosition}px`;
-    }
+    albumPhotoArea.style.top = `0px`;
+  }
+
+  getImageTop() {
+    return this.albumImageTop;
   }
 
 }

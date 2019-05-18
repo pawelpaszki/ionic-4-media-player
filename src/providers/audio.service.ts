@@ -114,9 +114,12 @@ export class AudioService {
   }
 
   createMusicControls() {
+    const cover = this.getCurrentlyPlayedSong().largeThumbnail !== null &&
+                  this.getCurrentlyPlayedSong().largeThumbnail !== undefined ? 
+                  this.getCurrentlyPlayedSong().largeThumbnail : 'https://i.ibb.co/mTNkwPP/skull-icon-inv.png';
     this.musicControls.create({
       track       : this.getCurrentlyPlayedSong().name,        // optional, default : ''
-      cover       : 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/techno-triangle-album-cover-flyer-template-2f2a9d4851c7de5f4f2362d3352f42fc_screen.jpg?ts=1477673828',      // optional, default : nothing
+      cover       : cover,
       isPlaying   : true,                         // optional, default : true
       dismissable : true,                         // optional, default : false
 

@@ -47,40 +47,44 @@ export class UtilService {
   }
 
   public getSongsIds(songs: Song[], id: number, shuffleOn: boolean, repeatMode: string): number[] {
-    let ids = songs.map((song) => {
-      return song.id;
-    });
-    switch(repeatMode) {
-      case this.repeatModes.ALL: 
-        // do nothing
-        break;
-      case this.repeatModes.PART_OF_SONG: 
-        // ignore for now
-        break;
-      case this.repeatModes.SONG: 
-        ids = [id];
-        break;
-      case this.repeatModes.FAVOURITE: 
-        let favouriteIds = this.getFavouriteSongsIds(songs);
-        if (favouriteIds.length === 0 && ids.length > 0) {
-          this.toast.showToast('No favourite songs. All songs will be played');
-        } else {
-          ids = favouriteIds;
-        }
-        break;
-      case this.repeatModes.SELECTED: 
-        let selectedIds = this.getSelectedIds(songs);
-        if (selectedIds.length === 0 && ids.length > 0) {
-          this.toast.showToast('No songs selected for playback. All songs will be played');
-        } else {
-          ids = selectedIds;
-        }
-        break;
+    if (songs !== undefined && songs !== null) {
+      let ids = songs.map((song) => {
+        return song.id;
+      });
+      switch(repeatMode) {
+        case this.repeatModes.ALL: 
+          // do nothing
+          break;
+        case this.repeatModes.PART_OF_SONG: 
+          // ignore for now
+          break;
+        case this.repeatModes.SONG: 
+          ids = [id];
+          break;
+        case this.repeatModes.FAVOURITE: 
+          let favouriteIds = this.getFavouriteSongsIds(songs);
+          if (favouriteIds.length === 0 && ids.length > 0) {
+            this.toast.showToast('No favourite songs. All songs will be played');
+          } else {
+            ids = favouriteIds;
+          }
+          break;
+        case this.repeatModes.SELECTED: 
+          let selectedIds = this.getSelectedIds(songs);
+          if (selectedIds.length === 0 && ids.length > 0) {
+            this.toast.showToast('No songs selected for playback. All songs will be played');
+          } else {
+            ids = selectedIds;
+          }
+          break;
+      }
+      if (shuffleOn) {
+        ids = this.shuffleIds(ids);
+      }
+      return ids;
+    } else {
+      return [];
     }
-    if (shuffleOn) {
-      ids = this.shuffleIds(ids);
-    }
-    return ids;
   }
 
   private getSelectedIds(songs: Song[]) {
@@ -104,6 +108,10 @@ export class UtilService {
   }
 
   public getSongById(songs: Song[], id: number): Song {
-    return songs.find(song => song.id === id);
+    if (songs !== undefined && songs !== null) {
+      return songs.find(song => song.id === id);
+    } else {
+      return null;
+    }
   }
 }

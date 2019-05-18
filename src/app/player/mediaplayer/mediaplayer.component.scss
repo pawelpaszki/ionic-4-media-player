@@ -40,6 +40,10 @@ ion-range {
   position: absolute;
   width: 100%;
   background: black;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #image {
