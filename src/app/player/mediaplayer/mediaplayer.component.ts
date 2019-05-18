@@ -249,7 +249,6 @@ export class MediaplayerComponent implements OnInit {
     const albumAreaHeight = bodyHeight - toolbarHeight - tabBarHeight - mediaProgressHeight - playControlsHeight;
 
     let albumPhotoArea = document.getElementById('albumPhoto');
-    let albumImage = document.getElementById('image');
     
     albumPhotoArea.style.height = `${albumAreaHeight}px`;
     albumPhotoArea.style.top = `0px`;

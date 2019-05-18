@@ -60,11 +60,13 @@ export class ListComponent implements AfterContentInit {
   ngAfterContentInit() {
     setTimeout(() => {
       this.persistenceService.getSongs().then(songs => {
-        this.songs = songs;
-        this.allMarkedForPlayback = this.allSongsMarkedForPlayback();
+        if (songs !== undefined && songs !== null && songs.length > 0) {
+          this.songs = songs;
+          this.allMarkedForPlayback = this.allSongsMarkedForPlayback();
+        }
         this.persistenceService.getSortMode().then(sortBy => {
           this.sortBy = sortBy !== undefined && sortBy !== null ? sortBy : this.sortModes[0];
-          if (this.sortBy !== this.sortModes[0]) {
+          if (this.sortBy !== this.sortModes[0] && songs !== undefined && songs.length > 0) {
             this.sortSongs();
           }
           this.persistenceService.getNextId().then(id => {
@@ -267,6 +269,9 @@ export class ListComponent implements AfterContentInit {
       const mdThumbnail = mediumThumbnail !== undefined ? mediumThumbnail : null;
       let fileSize = await this.fileService.getFileSize(url);
       let duration = await this.audioService.getDuration(mediaPath);
+      if (this.songs === null) {
+        this.songs = [];
+      }
       this.songs.push(
         {
           id: this.nextId,
@@ -288,7 +293,7 @@ export class ListComponent implements AfterContentInit {
       await this.persistenceService.setNextId(this.nextId);
       this.updateSongs();
     } catch (error) {
-      
+      console.log(error);
     }
   }
 

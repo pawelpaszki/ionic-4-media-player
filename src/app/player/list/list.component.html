@@ -4,8 +4,8 @@
       [ngStyle]="{ 'display': song.name.toUpperCase().includes(searchPhrase.toUpperCase()) ? 'block' : 'none', 'border-top': i === 0 ? '1px white solid' : 'none' }">
       <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
         <div style="flex: 2;" id="img">
-          <img src="../../assets/icon/note.png">
-          
+          <img *ngIf="song.largeThumbnail === null" src="../../assets/icon/skull_icon_inv.png">
+          <img *ngIf="song.largeThumbnail !== null" id="image" src="{{song.largeThumbnail}}">
           <!-- <ion-icon name="musical-notes" style="color: #b5c827; font-size: 18px;"></ion-icon> -->
         </div>
         <div style="flex: 8; flex-direction: row; width: 100%; height: auto;">

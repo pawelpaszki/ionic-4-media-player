@@ -24,7 +24,7 @@ export class SearchComponent implements OnInit {
   }
 
   search(searchPhrase: string) {
-    console.log('search: ' + searchPhrase);
+    this.searchResults = [];
     this.youtube.search(searchPhrase).subscribe((response: any) => {
       console.log(response);
       if (response.items !== undefined) {
