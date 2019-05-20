@@ -50,17 +50,19 @@ ionic cordova run android -l
 <!-- USAGE EXAMPLES -->
 ## Functionality and its status
 
-* loading and removing local media to/from the playlist (DONE)
-* playback of local media from the playlist (DONE)
-* rearranging the playlist song by song (DONE)
-* displaying the playlist in card with album image (if present) or in plain list (DONE)
-* marking songs as favourite (DONE)
+* loading and removing local media to/from the playlist
+* playback of local media from the playlist
+* rearranging the playlist song by song
+* displaying the playlist in card with album image (if present) or in plain list
+* marking songs as favourite
 * Persitence:
-  * playlist with the info about the songs, including: (DONE)
+  * playlist with the info about the songs, including:
     * name
     * favourite flag
     * markedForDeletion flag
-    * duration and more
+    * duration
+    * thumbnail
+    * and more
   * shuffle (on or off)
   * repeat mode:
     * none
@@ -70,10 +72,10 @@ ionic cordova run android -l
     * all
     * part of the song (it can be set to loop through the part of the song by specifying start and end)
   * selected sort (if any)
-* different repeat modes (see repeat mode in the Persistence above) (DONE)
+* different repeat modes (see repeat mode in the Persistence above)
 * turn off timer (specifies when the media playing is to be stopped) (TBD)
-* search Youtube API (DONE)
-* download from Youtube (front end part TBD. Server to download the files need to be developed)
+* search Youtube API
+* download from Youtube
 
 <!-- CONTRIBUTING -->
 ## Contributing
