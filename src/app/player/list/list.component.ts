@@ -31,6 +31,7 @@ export class ListComponent implements AfterContentInit {
   public sortBy: string = this.sortModes[0];
   public displayMode: string = this.constants.DISPLAY_MODES.DETAIL; // TODO get from persistence service later
   private nextId: number;
+  private currentlyPlayedId: number = -1;
 
   constructor(public fileChooser: FileChooser, public persistenceService: PersistenceService,
               public keyboard: Keyboard, public platform: Platform, public fileService: FileService, public audioService: AudioService,
@@ -46,6 +47,10 @@ export class ListComponent implements AfterContentInit {
 
     platform.resume.subscribe((result) =>{
       this.getNewSongList();
+    });
+
+    events.subscribe('playback:progress', (song, progress) => {
+      this.currentlyPlayedId = song.id;
     });
   }
 

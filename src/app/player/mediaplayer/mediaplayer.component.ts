@@ -157,7 +157,7 @@ export class MediaplayerComponent implements OnInit {
     this.currentlyPlayedSong = song;
     this.max = this.currentlyPlayedSong.duration;
     console.log(this.currentlyPlayedSong.largeThumbnail);
-    if (this.currentlyPlayedSong.largeThumbnail !== undefined) {
+    if (this.currentlyPlayedSong.largeThumbnail !== null) {
       if (this.albumCoverAddress !== this.currentlyPlayedSong.largeThumbnail) {
         this.albumCoverAddress = this.currentlyPlayedSong.largeThumbnail;
       }
