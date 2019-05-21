@@ -40,7 +40,7 @@ This project is developed in my spare time after work as a proof of concept ioni
 
 ### Playlist simple
 
-![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/list-simple.png)
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/list.png)
 
 ### Youtube search
 
