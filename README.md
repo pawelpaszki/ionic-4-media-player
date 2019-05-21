@@ -7,9 +7,15 @@
 ## Table of Contents
 
 * [About the Project](#about-the-project)
+* [Screenshots](#screenshots)
+  * [Player](#player)
+  * [Playlist detailed](#playlist-detailed)
+  * [Playlist simple](#playlist-simple)
+  * [Youtube search](#youtube-search)
+  * [Youtube download](#youtube-download)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
+  * [Installation and running](#installation)
 * [Functionality](#usage)
 * [Contributing](#contributing)
 * [License](#license)
@@ -20,7 +26,29 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project is developed in my spare time after work as a proof of concept ionic 4 media player. 
+This project is developed in my spare time after work as a proof of concept ionic 4 media player.
+
+## Screenshots
+
+### Player
+
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/player.png
+
+### Playlist detailed
+
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/list-detailed.png
+
+### Playlist simple
+
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/list-simple.png
+
+### Youtube search
+
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/ytsearch.png
+
+### Youtube download
+
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/ytsearch-downloaded.png
 
 ## Getting started
 
