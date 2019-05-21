@@ -32,23 +32,23 @@ This project is developed in my spare time after work as a proof of concept ioni
 
 ### Player
 
-![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/player.png
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/player.png)
 
 ### Playlist detailed
 
-![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/list-detailed.png
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/list-detailed.png)
 
 ### Playlist simple
 
-![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/list-simple.png
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/list-simple.png)
 
 ### Youtube search
 
-![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/ytsearch.png
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/ytsearch.png)
 
 ### Youtube download
 
-![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/ytsearch-downloaded.png
+![alt tag](https://github.com/pawelpaszki/ionic-4-media-player/blob/screenshots/screenshots/ytsearch-downloaded.png)
 
 ## Getting started
 
