@@ -71,7 +71,7 @@ export class ListComponent implements AfterContentInit {
         }
         this.persistenceService.getSortMode().then(sortBy => {
           this.sortBy = sortBy !== undefined && sortBy !== null ? sortBy : this.sortModes[0];
-          if (this.sortBy !== this.sortModes[0] && songs !== undefined && songs.length > 0) {
+          if (this.sortBy !== this.sortModes[0] && songs !== undefined && songs !== null && songs.length > 0) {
             this.sortSongs();
           }
           this.persistenceService.getNextId().then(id => {
@@ -216,7 +216,9 @@ export class ListComponent implements AfterContentInit {
         this.sortBy = this.sortModes[currentSortIndex + 1];
       }
     }
-    this.sortSongs();
+    if (this.songs !== null && this.songs !== undefined && this.songs.length > 0) {
+      this.sortSongs();
+    }
     this.persistenceService.persistSortMode(this.sortBy);
   }
 

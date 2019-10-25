@@ -26,7 +26,7 @@ export class SearchComponent implements OnInit {
   search(searchPhrase: string) {
     this.searchResults = [];
     this.youtube.search(searchPhrase).subscribe((response: any) => {
-      console.log(response);
+      // console.log(response);
       if (response.items !== undefined) {
         response.items.forEach(item => {
           this.searchResults.push({id: item.id.videoId, name: item.snippet.title, thumbnails: {large: item.snippet.thumbnails.high.url, medium: item.snippet.thumbnails.medium.url}});
@@ -41,6 +41,7 @@ export class SearchComponent implements OnInit {
       this.youtube.extractMedia(id)
       .subscribe((response: any) => {
         console.log(response);
+        console.log(response.toString());
         if (response.data !== undefined && response.data.Key !== undefined) {
           this.youtube.downloadFile(id, name, largeThumbnail, mediumThumbnail);
         }
@@ -49,7 +50,7 @@ export class SearchComponent implements OnInit {
   }
 
   removeDownloadedId(id) {
-    for( var i = 0; i < this.downloadedMediaIds.length; i++){ 
+    for (var i = 0; i < this.downloadedMediaIds.length; i++) { 
       if (this.downloadedMediaIds[i] === id) {
         this.downloadedMediaIds.splice(i, 1);
         break;
