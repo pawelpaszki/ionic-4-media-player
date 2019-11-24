@@ -46,10 +46,16 @@ export class SearchComponent implements OnInit {
       }
     });
   }
-
+ 
   extractDuration(value: string) {
-    let duration: string = value.replace("PT","").replace("M",":").replace("S","");
-    duration.endsWith(":") ? duration = `${duration}00` : null;
+    let duration: string = value.replace("PT","").replace("M",":").replace("H",":").replace("S","");
+    duration.endsWith(":") ? duration = `${duration}00` : null; // if 0 seconds
+    duration.substr(0,duration.length - 1).endsWith(":") ? 
+    duration = `${duration.substr(0,duration.lastIndexOf(":") + 1)}0${duration.substring(duration.lastIndexOf(":") + 1)}` : null; // less then 10s and > 0m
+    duration.length === 1 ? duration = `0${duration}` : null;// if less than 10 seconds
+    duration.length === 2 ? duration = `0:${duration}` : null; // if only seconds
+    duration.charAt(duration.length - 3) === ":" && duration.charAt(duration.length - 5) === ":" ? 
+    duration = `${duration.substr(0,duration.indexOf(":")+1)}0${duration.substring(duration.lastIndexOf(":")-1,duration.length)}` : null;
     return duration;
   }
 
