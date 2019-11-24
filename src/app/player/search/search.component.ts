@@ -28,11 +28,29 @@ export class SearchComponent implements OnInit {
     this.youtube.search(searchPhrase).subscribe((response: any) => {
       // console.log(response);
       if (response.items !== undefined) {
+        console.log(response.items);
         response.items.forEach(item => {
-          this.searchResults.push({id: item.id.videoId, name: item.snippet.title, thumbnails: {large: item.snippet.thumbnails.high.url, medium: item.snippet.thumbnails.medium.url}});
+          this.youtube.getDuration(item.id.videoId).subscribe((resp: any) => {
+            console.log(resp);
+            this.searchResults.push({
+              id: item.id.videoId,
+              name: item.snippet.title,
+              duration: this.extractDuration(resp.items[0].contentDetails.duration.toString()),
+              thumbnails: {
+                large: item.snippet.thumbnails.high.url,
+                medium: item.snippet.thumbnails.medium.url
+              }
+            });
+          });
         });
       }
     });
+  }
+
+  extractDuration(value: string) {
+    let duration: string = value.replace("PT","").replace("M",":").replace("S","");
+    duration.endsWith(":") ? duration = `${duration}00` : null;
+    return duration;
   }
 
   downloadMedia(id: string, name: string, largeThumbnail?: string, mediumThumbnail?: string) {

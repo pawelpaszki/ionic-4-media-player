@@ -6,7 +6,7 @@
         <ion-img [src]="result.thumbnails.medium"></ion-img>
       </div>
       <div style="flex: 7; flex-direction: row; width: 100%; height: auto; padding-left: 0.5em; color: #b5c827;">
-        {{result.name}}
+        {{result.name}} [{{result.duration}}]
         <img *ngIf="downloadedMediaIds.indexOf(result.id) !== -1" class="download" src="../../assets/icon/download.gif">
       </div>
     </div>

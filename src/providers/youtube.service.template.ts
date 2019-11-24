@@ -13,7 +13,13 @@ export class YoutubeService {
   search(searchPhrase: string) {
     const ytKey = 'your_key_goes_here';
     return this.http.get(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=${searchPhrase}&type=video&key=${ytKey}`);
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${searchPhrase}&type=video&key=${ytKey}`);
+  }
+
+  getDuration(id: string) {
+    const ytKey = 'your_key_goes_here';
+    return this.http.get(
+      `https://www.googleapis.com/youtube/v3/videos?id=${id}&part=contentDetails&key=${ytKey}`);
   }
 
   extractMedia(youtubeVideoId: string) {
