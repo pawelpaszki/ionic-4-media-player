@@ -6,7 +6,7 @@
       <div style="display: flex; flex-direction: row; width: 100%; height: auto;">
         <div style="flex: 2;" id="img">
           <img *ngIf="song.largeThumbnail === null" src="../../assets/icon/thumbnail.png">
-          <img *ngIf="song.largeThumbnail !== null" id="image" src="{{song.largeThumbnail}}">
+          <img *ngIf="song.largeThumbnail !== null" id="image" src="{{song.largeThumbnail}}" onError="this.src='../../assets/icon/thumbnail.png'">
         </div>
         <div style="flex: 8; flex-direction: row; width: 100%; height: auto;">
           <div style="flex: 2; min-height: 66%; max-height: 66%; padding-left: 0.5em; padding-top: 0.5em;" class="playlist-item-card">
