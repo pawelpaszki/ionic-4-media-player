@@ -92,12 +92,18 @@
           <div style="flex: 9; line-height: 2.1em; min-height: 2.1em; max-height: 2.1em; font-size: 1em; overflow-y: hidden; padding-left: 0.5em; padding-top: 0.5em;" class="playlist-item-card">
             <ion-checkbox slot="start" *ngIf="deletionEnabled" [(ngModel)]="song.isMarkedForDeletion" (ionChange)="toggleMarkedForPlayback(song.isSelectedForPlayback)"></ion-checkbox> 
             <ion-checkbox slot="start" *ngIf="markForPlaybackSelectionEnabled" [(ngModel)]="song.isSelectedForPlayback" (ionChange)="toggleMarkedForPlayback(song.isSelectedForPlayback)"></ion-checkbox>
-            {{song.name}}
+            <ion-input [(ngModel)]="song.name" [disabled]="song.id !== renamedId" style="padding: 0 !important; opacity: 1 !important;" no-padding></ion-input>
           </div>
           <div style="flex: 1; text-align: center; color: #b5c827;">
             <ion-reorder *ngIf="reorderingEnabled"></ion-reorder>
+            <ion-icon (click)="enableRenaming(song.id)" style="font-size: 30px; position: relative; color: #b5c827;" name="create" *ngIf="!deletionEnabled && !reorderingEnabled && !markForPlaybackSelectionEnabled && renamedId === -1"></ion-icon>
+            <ion-icon (click)="renameSong(song.name)" name="checkmark" style="font-size: 30px; position: relative; color: #b5c827;" *ngIf="!deletionEnabled && !reorderingEnabled && !markForPlaybackSelectionEnabled && renamedId === song.id"></ion-icon>
           </div>
         </div>
+      </ion-card>
+      <!-- calculate keyboard height later -->
+      <ion-card style="height: 220px;" *ngIf="renamedId !== -1 && keyboard.isVisible">
+        
       </ion-card>
     </ion-reorder-group>
   </ion-list>
@@ -127,7 +133,7 @@
       </ion-icon>
     </div>
     <div style="flex: 1; -ms-flex: 1; -webkit-flex: 1;">
-      <ion-icon name="create" (click)="toggleEditMode()"></ion-icon>
+      <ion-icon name="cog" (click)="toggleEditMode()"></ion-icon>
     </div>
     <div *ngIf="displayMode === constants.DISPLAY_MODES.DETAIL" style="flex: 1; -ms-flex: 1; -webkit-flex: 1;" (click)="changeDisplayMode()">
       <ion-icon name="image"></ion-icon>

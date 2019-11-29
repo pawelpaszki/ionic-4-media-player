@@ -17,6 +17,7 @@ import { Song } from '../../../interfaces/song';
 })
 export class ListComponent implements AfterContentInit {
 
+  public renamedId: number = -1;
   public searchPhrase: string = '';
   public markForPlaybackSelectionEnabled: boolean = false;
   public searchEnabled: boolean = false;
@@ -80,6 +81,20 @@ export class ListComponent implements AfterContentInit {
         });
       });
     }, 100);
+  }
+
+  enableRenaming(id: number) {
+    this.renamedId = id;
+  }
+
+  async renameSong(name: string) {
+    for (let i = 0; i < this.songs.length; i++) {
+      if (this.songs[i].id === this.renamedId) {
+        this.songs[i].name = name.trim();
+        this.renamedId = -1;
+        await this.persistenceService.saveSongs(this.songs);
+      }
+    }
   }
 
   changeDisplayMode() {

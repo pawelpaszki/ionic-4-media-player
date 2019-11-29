@@ -83,6 +83,7 @@ ionic cordova run android -l
 * rearranging the playlist song by song
 * displaying the playlist in card with album image (if present) or in plain list
 * marking songs as favourite
+* renaming songs
 * Persitence:
   * playlist with the info about the songs, including:
     * name
@@ -98,11 +99,12 @@ ionic cordova run android -l
     * favourite
     * selected songs (select option available in the player component)
     * all
-    * part of the song (it can be set to loop through the part of the song by specifying start and end)
+    * part of the song (it can be set to loop through the part of the song by specifying start and end - TODO)
   * selected sort (if any)
 * different repeat modes (see repeat mode in the Persistence above)
-* turn off timer (specifies when the media playing is to be stopped) (TBD)
+* turn off timer (specifies when the media playing is to be stopped) (TODO)
 * search Youtube API
+* remove file from device (TODO)
 * download from Youtube
 
 <!-- CONTRIBUTING -->
