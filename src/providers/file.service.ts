@@ -22,6 +22,10 @@ export class FileService {
     return this.file.resolveLocalFilesystemUrl(nativeURL);
   }
 
+  removeFile(name): Promise<any> {
+    return this.file.removeFile(this.file.externalRootDirectory  + '/Download/', name);
+  }
+
   getFileSize(uri: string): Promise<any> {
     const p: Promise<any> = new Promise((resolve, reject) => {
       setTimeout(() => {
