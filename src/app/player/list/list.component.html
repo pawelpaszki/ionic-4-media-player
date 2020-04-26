@@ -9,12 +9,12 @@
           <img *ngIf="song.largeThumbnail !== null" id="image" src="{{song.largeThumbnail}}" onError="this.src='../../assets/icon/thumbnail.png'">
         </div>
         <div style="flex: 8; flex-direction: row; width: 100%; height: auto;">
-          <div style="flex: 2; min-height: 66%; max-height: 66%; padding-left: 0.5em; padding-top: 0.5em;" class="playlist-item-card">
+          <div style="flex: 2; min-height: 70%; max-height: 70%; padding: 0.5em 0 1em 0.5em" class="playlist-item-card">
             <div style="line-height: 1.5em; max-height: 3em; overflow-y: hidden;">
               {{song.name}}
             </div>
           </div>
-          <div style="flex: 1; min-height: 34%; max-height: 34%; padding-left: 0.5em; display: flex; flex-direction: row;" class="playlist-item-card">
+          <div style="flex: 1; min-height: 30%; max-height: 30%; padding-left: 0.5em; display: flex; flex-direction: row;" class="playlist-item-card">
             <div style="flex: 2; font-size: 16px; font-weight: 700; margin-top: -0.3em;">
               <ion-icon name="md-analytics" style="color: #b5c827; font-size: 18px;"></ion-icon> <p style="margin: 0 0 0 5px; display: inline-block;">{{song.numberOfPlaybacks}}</p>
             </div>
