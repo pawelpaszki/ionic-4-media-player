@@ -25,7 +25,7 @@ import { SearchComponent } from './search/search.component';
     PlayerPage,
     MediaplayerComponent,
     ListComponent,
-    SearchComponent
+    SearchComponent,
   ],
   exports:[
     MediaplayerComponent,

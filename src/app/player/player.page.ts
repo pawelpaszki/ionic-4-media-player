@@ -3,6 +3,7 @@ import { Events, Platform } from '@ionic/angular';
 import { UtilService } from 'src/providers/util.service';
 import { AudioService } from 'src/providers/audio.service';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { ToastService } from 'src/providers/toast.service';
 
 @Component({
   selector: 'app-player',
@@ -14,7 +15,7 @@ export class PlayerPage {
   private title: string = 'Yimp';
   private searchPhrase: string = '';
   constructor(public events: Events, public util: UtilService, public platform: Platform,
-    private audioService: AudioService, private androidPermissions: AndroidPermissions) {
+    private audioService: AudioService, private androidPermissions: AndroidPermissions, private toast: ToastService) {
 
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
       result => console.log('Has permission?',result.hasPermission),
@@ -57,7 +58,11 @@ export class PlayerPage {
 
   search() {
     console.log('publish search');
-    this.events.publish('yt:search', this.searchPhrase);
-    this.searchPhrase = '';
+    if (this.searchPhrase.length > 2) {
+      this.events.publish('yt:search', this.searchPhrase);
+      this.searchPhrase = '';
+    } else {
+      this.toast.showToast('Search phrase too short - minimum 3 characters required!')
+    }
   }
 }

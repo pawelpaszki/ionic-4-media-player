@@ -26,7 +26,6 @@ export class SearchComponent implements OnInit {
   search(searchPhrase: string) {
     this.searchResults = [];
     this.youtube.search(searchPhrase).subscribe((response: any) => {
-      // console.log(response);
       if (response.items !== undefined) {
         console.log(response.items);
         response.items.forEach(item => {
@@ -66,8 +65,8 @@ export class SearchComponent implements OnInit {
       .subscribe((response: any) => {
         console.log(response);
         console.log(response.toString());
-        if (response.data !== undefined && response.data.Key !== undefined) {
-          this.youtube.downloadFile(id, name, largeThumbnail, mediumThumbnail);
+        if (response !== undefined && response.fileId !== undefined) {
+          this.youtube.downloadFile(id, response.fileId, name, largeThumbnail, mediumThumbnail);
         }
       });
     }
